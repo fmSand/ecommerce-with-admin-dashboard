@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
           fields: ["cartId", "productId"],
         },
       ],
-    }
+    },
   );
 
   CartItem.associate = (models) => {

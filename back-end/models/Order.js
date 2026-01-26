@@ -24,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      totalAmount: { //consider removing?
+      totalAmount: {
+        //consider removing?
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
@@ -36,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "orders",
       timestamps: true,
-    }
+    },
   );
 
   Order.associate = (models) => {

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "carts",
       timestamps: true,
-    }
+    },
   );
 
   Cart.associate = (models) => {

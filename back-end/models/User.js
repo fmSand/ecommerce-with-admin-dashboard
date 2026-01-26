@@ -32,11 +32,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      city: {//City
+      city: {
+        //City
         type: DataTypes.STRING,
         allowNull: false, //true, depending on admin rewuirements
       },
-      phone: { //Thelephone
+      phone: {
+        //Thelephone
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -57,8 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "users",
       timestamps: true,
-      indexes: [{ fields: ["roleId"] }, { fields: ["email"] }],
-    }
+    },
   );
 
   User.associate = (models) => {
@@ -70,4 +71,3 @@ module.exports = (sequelize, DataTypes) => {
 
   return User;
 };
-

@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       tableName: "brands",
       timestamps: false,
-    }
+    },
   );
 
   Brand.associate = (models) => {
@@ -20,4 +20,3 @@ module.exports = (sequelize, DataTypes) => {
 
   return Brand;
 };
-
