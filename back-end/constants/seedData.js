@@ -1,4 +1,10 @@
 module.exports = {
+  ORDER_STATUSES: [
+    { id: 1, name: "In Progress" },
+    { id: 2, name: "Ordered" },
+    { id: 3, name: "Completed" },
+  ],
+
   ROLES: [
     { id: 1, name: "Admin" },
     { id: 2, name: "User" },
@@ -17,7 +23,7 @@ module.exports = {
     firstName: "Admin",
     lastName: "Support",
     address: "Online",
-    city: "Online", //make nulable and remove? Use an actual city?
+    city: "Norway",
     phone: "911",
   },
 };

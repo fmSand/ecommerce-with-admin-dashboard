@@ -1,5 +1,3 @@
-const ORDER_STATUS = require("../constants/orderStatus");
-
 module.exports = (sequelize, DataTypes) => {
   const Order = sequelize.define(
     "Order",
@@ -8,12 +6,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(8),
         allowNull: false,
         unique: true,
-      },
-      status: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: ORDER_STATUS.IN_PROGRESS,
-        validate: { isIn: [Object.values(ORDER_STATUS)] },
       },
       discountPercentAtPurchase: {
         type: DataTypes.INTEGER,
@@ -24,14 +16,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      totalAmount: {
-        //consider removing?
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-      },
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      orderStatusId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1,
       },
     },
     {
@@ -42,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Order.associate = (models) => {
     Order.belongsTo(models.User, { foreignKey: "userId", as: "user", onDelete: "RESTRICT" });
+    Order.belongsTo(models.OrderStatus, { foreignKey: "orderStatusId", as: "orderStatus", onDelete: "RESTRICT" });
     Order.hasMany(models.OrderItem, { foreignKey: "orderId", as: "items", onDelete: "CASCADE" });
   };
 
