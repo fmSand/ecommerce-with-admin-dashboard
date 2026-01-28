@@ -2,7 +2,6 @@ module.exports = (sequelize, DataTypes) => {
   const Role = sequelize.define(
     "Role",
     {
-      //seed should force id 1-Admin, 2-User.
       name: {
         type: DataTypes.STRING(50),
         allowNull: false,

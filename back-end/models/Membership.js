@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       threshold: {
         type: DataTypes.INTEGER,
-        unique: true,
         allowNull: false,
+        unique: true,
       },
       discountPercent: {
         type: DataTypes.INTEGER,
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       tableName: "memberships",
-      timestamps: false,
+      timestamps: true,
     },
   );
 

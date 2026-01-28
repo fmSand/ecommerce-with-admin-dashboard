@@ -1,4 +1,3 @@
-//consider UUID/UUIDV4 for the id field?
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
@@ -33,12 +32,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       city: {
-        //City
         type: DataTypes.STRING,
-        allowNull: false, //true, depending on admin rewuirements
+        allowNull: false,
       },
       phone: {
-        //Thelephone
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -66,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.Role, { foreignKey: "roleId", as: "role", onDelete: "RESTRICT" });
     User.belongsTo(models.Membership, { foreignKey: "membershipId", as: "membership", onDelete: "RESTRICT" });
     User.hasMany(models.Order, { foreignKey: "userId", as: "orders", onDelete: "RESTRICT" });
-    User.hasOne(models.Cart, { foreignKey: "userId", onDelete: "CASCADE" });
+    User.hasOne(models.Cart, { foreignKey: "userId", as: "cart", onDelete: "CASCADE" });
   };
 
   return User;

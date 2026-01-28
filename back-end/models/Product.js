@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       unitPrice: {
-        //unitprice
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
       },
@@ -21,13 +20,12 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
       },
       imgUrl: {
-        //imgurl
         type: DataTypes.STRING,
         allowNull: true,
       },
       dateAdded: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
       },
       isDeleted: {
         type: DataTypes.BOOLEAN,
