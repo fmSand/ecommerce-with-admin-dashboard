@@ -1,5 +1,5 @@
 const { error } = require("../utils/response");
-const { AppError } = require("../utils");
+const { AppError } = require("../utils/AppError");
 const { ValidationError, UniqueConstraintError, ForeignKeyConstraintError } = require("sequelize");
 
 function toDetails(err) {
