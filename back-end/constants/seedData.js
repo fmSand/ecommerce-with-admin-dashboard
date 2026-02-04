@@ -1,3 +1,5 @@
+const { ADMIN_ROLE_ID, USER_ROLE_ID, ADMIN_ROLE_NAME, USER_ROLE_NAME } = require("./roles");
+
 module.exports = {
   ORDER_STATUSES: [
     { id: 1, name: "In Progress" },
@@ -6,8 +8,8 @@ module.exports = {
   ],
 
   ROLES: [
-    { id: 1, name: "Admin" },
-    { id: 2, name: "User" },
+    { id: ADMIN_ROLE_ID, name: ADMIN_ROLE_NAME },
+    { id: USER_ROLE_ID, name: USER_ROLE_NAME },
   ],
 
   MEMBERSHIPS: [

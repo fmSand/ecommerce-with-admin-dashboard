@@ -1,6 +1,7 @@
 const { hashPassword } = require("../utils/hash");
 const { AppError } = require("../utils/AppError");
 const { ORDER_STATUSES, ROLES, MEMBERSHIPS, ADMIN_USER } = require("../constants/seedData");
+const { ADMIN_ROLE_ID } = require("../constants/roles");
 
 async function initializeDatabase(db, noroffResponse) {
   const products = noroffResponse?.data;
@@ -57,7 +58,7 @@ async function seedAdminUser(db, transaction) {
   const existing = await db.User.findOne({
     where: {
       username: ADMIN_USER.username,
-      roleId: 1,
+      roleId: ADMIN_ROLE_ID,
     },
     transaction,
   });
@@ -75,7 +76,7 @@ async function seedAdminUser(db, transaction) {
       city: ADMIN_USER.city,
       phone: ADMIN_USER.phone,
       passwordHash,
-      roleId: 1,
+      roleId: ADMIN_ROLE_ID,
       membershipId: bronze.id,
       totalPurchasedQuantity: 0,
     },
