@@ -1,5 +1,3 @@
-//handles async function errors and passes them to the error handling middleware
-//from productivity graveyard project
 function asyncHandler(fn) {
   return async (req, res, next) => {
     try {
@@ -10,4 +8,4 @@ function asyncHandler(fn) {
   };
 }
 
-module.exports = asyncHandler;
+module.exports = { asyncHandler };
