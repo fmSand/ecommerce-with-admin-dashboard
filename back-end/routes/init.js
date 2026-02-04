@@ -1,7 +1,6 @@
-const express = require("express");
-const router = express.Router();
+const router = require("express").Router();
 const db = require("../models");
-const AppError = require("../utils/AppError");
+const { AppError } = require("../utils/AppError");
 const { initializeDatabase } = require("../services/InitService");
 const { success } = require("../utils/response");
 

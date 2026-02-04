@@ -1,5 +1,5 @@
 const { hashPassword } = require("../utils/hash");
-const AppError = require("../utils/AppError");
+const { AppError } = require("../utils/AppError");
 const { ORDER_STATUSES, ROLES, MEMBERSHIPS, ADMIN_USER } = require("../constants/seedData");
 
 async function initializeDatabase(db, noroffResponse) {
