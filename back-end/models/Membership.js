@@ -25,7 +25,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Membership.associate = (models) => {
-    Membership.hasMany(models.User, { foreignKey: "membershipId", as: "users", onDelete: "RESTRICT" });
+    Membership.hasMany(models.User, {
+      foreignKey: "membershipId",
+      as: "users",
+      onDelete: "RESTRICT",
+    });
   };
 
   return Membership;

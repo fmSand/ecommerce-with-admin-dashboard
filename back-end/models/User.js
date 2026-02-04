@@ -60,10 +60,26 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.associate = (models) => {
-    User.belongsTo(models.Role, { foreignKey: "roleId", as: "role", onDelete: "RESTRICT" });
-    User.belongsTo(models.Membership, { foreignKey: "membershipId", as: "membership", onDelete: "RESTRICT" });
-    User.hasMany(models.Order, { foreignKey: "userId", as: "orders", onDelete: "RESTRICT" });
-    User.hasOne(models.Cart, { foreignKey: "userId", as: "cart", onDelete: "CASCADE" });
+    User.belongsTo(models.Role, {
+      foreignKey: "roleId",
+      as: "role",
+      onDelete: "RESTRICT",
+    });
+    User.belongsTo(models.Membership, {
+      foreignKey: "membershipId",
+      as: "membership",
+      onDelete: "RESTRICT",
+    });
+    User.hasMany(models.Order, {
+      foreignKey: "userId",
+      as: "orders",
+      onDelete: "RESTRICT",
+    });
+    User.hasOne(models.Cart, {
+      foreignKey: "userId",
+      as: "cart",
+      onDelete: "CASCADE",
+    });
   };
 
   return User;

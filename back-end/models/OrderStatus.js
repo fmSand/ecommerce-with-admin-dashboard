@@ -15,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   OrderStatus.associate = (models) => {
-    OrderStatus.hasMany(models.Order, { foreignKey: "orderStatusId", as: "orders", onDelete: "RESTRICT" });
+    OrderStatus.hasMany(models.Order, {
+      foreignKey: "orderStatusId",
+      as: "orders",
+      onDelete: "RESTRICT",
+    });
   };
 
   return OrderStatus;

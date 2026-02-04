@@ -48,10 +48,26 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   Product.associate = (models) => {
-    Product.belongsTo(models.Brand, { foreignKey: "brandId", as: "brand", onDelete: "RESTRICT" });
-    Product.belongsTo(models.Category, { foreignKey: "categoryId", as: "category", onDelete: "RESTRICT" });
-    Product.hasMany(models.CartItem, { foreignKey: "productId", as: "cartItems", onDelete: "RESTRICT" });
-    Product.hasMany(models.OrderItem, { foreignKey: "productId", as: "orderItems", onDelete: "RESTRICT" });
+    Product.belongsTo(models.Brand, {
+      foreignKey: "brandId",
+      as: "brand",
+      onDelete: "RESTRICT",
+    });
+    Product.belongsTo(models.Category, {
+      foreignKey: "categoryId",
+      as: "category",
+      onDelete: "RESTRICT",
+    });
+    Product.hasMany(models.CartItem, {
+      foreignKey: "productId",
+      as: "cartItems",
+      onDelete: "RESTRICT",
+    });
+    Product.hasMany(models.OrderItem, {
+      foreignKey: "productId",
+      as: "orderItems",
+      onDelete: "RESTRICT",
+    });
   };
 
   return Product;
