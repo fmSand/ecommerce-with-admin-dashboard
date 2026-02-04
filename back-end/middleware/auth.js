@@ -1,5 +1,6 @@
-const AppError = require('../utils/AppError');
+const { AppError } = require("../utils/AppError");
 const { verifyToken } = require("../utils/jwt");
+const { ADMIN_ROLE_ID } = require("../constants/roles");
 
 function authenticate(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -12,7 +13,7 @@ function authenticate(req, res, next) {
     req.user = verifyToken(authHeader.split(" ")[1]);
     next();
   } catch (err) {
-    if (err.name === 'TokenExpiredError') {
+    if (err.name === "TokenExpiredError") {
       return next(new AppError(401, "Token expired"));
     }
     return next(new AppError(401, "Invalid token"));
@@ -20,10 +21,21 @@ function authenticate(req, res, next) {
 }
 
 function requireAdmin(req, res, next) {
-  if (req.user.roleId !== 1) {
+  if (req.user.roleId !== ADMIN_ROLE_ID) {
     return next(new AppError(403, "Admin access required"));
   }
   next();
 }
 
-module.exports = { authenticate, requireAdmin };
+function requireSelfOrAdmin(req, res, next) {
+  const targetId = req.params.id;
+  const isAdmin = req.user.roleId === ADMIN_ROLE_ID;
+  const isSelf = req.user.id === targetId;
+
+  if (!isAdmin && !isSelf) {
+    throw new AppError(403, "Access denied");
+  }
+  next();
+}
+
+module.exports = { authenticate, requireAdmin, requireSelfOrAdmin };
