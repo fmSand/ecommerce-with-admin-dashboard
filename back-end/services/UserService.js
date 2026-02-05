@@ -1,4 +1,5 @@
 const { AppError } = require("../utils/AppError");
+const { Op } = require("sequelize");
 
 class UserService {
   constructor(db) {
@@ -22,6 +23,14 @@ class UserService {
     return user;
   }
 
+  async getByUsernameOrEmail(identifier) {
+    return this.User.findOne({
+      where: {
+        [Op.or]: [{ username: identifier }, { email: identifier }],
+      },
+    });
+  }
+
   async getAll() {
     return this.User.findAll({
       include: [
@@ -38,9 +47,6 @@ class UserService {
   }
 
   async update(userId) {
-    //include role and membership
-    //att. exclude passwordhash.
-    //throw if not found
     //only allow certain fields to be updated
     //updae fields and return user
     const user = await this.User.findByPk(userId, {
@@ -57,6 +63,10 @@ class UserService {
     await user.update(allowedFields);
     return user;
   }
+
+  //delete()
+  //update users membership
+  //update users role
 }
 
 module.exports = UserService;
