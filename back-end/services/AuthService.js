@@ -1,18 +1,32 @@
+const { AppError } = require("../utils");
 const { hashPassword, verifyPassword } = require("../utils/hash");
 const { generateToken } = require("../utils/jwt");
+const { USER_ROLE_ID } = require("../constants/roles");
 
 class AuthService {
-  constructor(db) {
-    this.sequelize = db.sequelize;
-    //this.Membership = db.Membership;
-    //this.userService = this.userService;
-    //this.user = db.User;
+  constructor({ userService, membershipService }) {
+    this.userService = userService;
+    this.membershipService = membershipService;
   }
 
   async register(userData) {
-    //const bronze = await memmbershipservice getbyname?
-    ///const passwordHash = await hashPassword(userData.password);
-    //const user = await this.user.create //this.userService.create({username, email, passwordHash, roleid etc
+    const bronze = await this.membershipService.getByName("Bronze");
+    const passwordHash = await hashPassword(userData.password);
+
+    const user = await this.userService.create({
+      username: userData.username,
+      email: userData.email,
+      passwordHash,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      address: userData.address,
+      city: userData.city,
+      phone: userData.phone,
+      totalPurchasedQuantity: 0,
+      roleId: USER_ROLE_ID,
+      membershipId: bronze.id,
+    });
+
     const token = generateToken({
       id: user.id,
       email: user.email,
@@ -27,18 +41,31 @@ class AuthService {
     };
   }
 
-  //username || email + password,
-  async login(username, email, password) {
-    //get username or email
-    //if not found throw error
-    //verify password with hash, if not match throw error
-    //generate token with user id, email and role,
-    //return user data + token
+  async login(identifier, password) {
+    const user = await this.userService.getByUsernameOrEmail(identifier);
+    if (!user) {
+      throw new AppError(401, "Invalid credentials");
+    }
+
+    const valid = await verifyPassword(password, user.passwordHash);
+    if (!valid) {
+      throw new AppError(401, "Invalid credentials");
+    }
+
+    const token = generateToken({
+      id: user.id,
+      email: user.email,
+      roleId: user.roleId,
+    });
+
+    return {
+      id: user.id,
+      email: user.email,
+      name: `${user.firstName} ${user.lastName}`,
+      //roleid
+      token,
+    };
   }
-
-
-  //logout()?
-
 }
 
 module.exports = AuthService;
