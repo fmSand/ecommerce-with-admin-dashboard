@@ -3,7 +3,6 @@ const { Op } = require("sequelize");
 
 class UserService {
   constructor(db) {
-    this.sequelize = db.sequelize; //remove if not needed
     this.User = db.User;
     this.Role = db.Role;
     this.Membership = db.Membership;
@@ -46,27 +45,22 @@ class UserService {
     return this.User.create(userData);
   }
 
-  async update(userId) {
-    //only allow certain fields to be updated
-    //updae fields and return user
+  async update(userId, updates) {
+    await this.User.update(updates, { where: { id: userId } });
+    const updatedUser = await this.getById(userId);
+    return updatedUser;
+  }
+
+  async updateRole(userId, roleId) {
     const user = await this.User.findByPk(userId, {
-      include: [
-        { model: this.Role, as: "role" },
-        { model: this.Membership, as: "membership" },
-      ],
       attributes: { exclude: ["passwordHash"] },
     });
     if (!user) throw new AppError(404, "User not found");
-
-    const allowedFields = ["firstName", "lastName", "userName", "email", "address", "city", "phone"];
-    //loop? check undefined?
-    await user.update(allowedFields);
+    await user.update({ roleId });
     return user;
   }
 
-  //delete()
-  //update users membership
-  //update users role
+  //delete user, update total purchases, update membership level,
 }
 
 module.exports = UserService;
