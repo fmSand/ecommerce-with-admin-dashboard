@@ -15,7 +15,7 @@ async function register(req, res) {
     city,
     phone,
   });
-  return success(res, 201, "User registered", result);
+  return success(res, 201, "User registered successfully", result);
 }
 
 async function login(req, res) {
