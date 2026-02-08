@@ -11,14 +11,12 @@ router.post("/", async (req, res, next) => {
     }
 
     const response = await fetch(process.env.NOROFF_PRODUCTS_URL);
-
     if (!response.ok) {
       throw new AppError(502, `Noroff API returned ${response.status}`);
     }
 
     const noroffData = await response.json();
     const result = await initializeDatabase(db, noroffData);
-
     if (result.alreadyInitialized) {
       return success(res, 200, "Database already initialized");
     }
