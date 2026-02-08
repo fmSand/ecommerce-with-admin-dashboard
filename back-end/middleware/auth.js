@@ -28,12 +28,12 @@ function requireAdmin(req, res, next) {
 }
 
 function requireSelfOrAdmin(req, res, next) {
-  const targetId = req.params.id;
+  const targetId = Number(req.params.id);
   const isAdmin = req.user.roleId === ADMIN_ROLE_ID;
   const isSelf = req.user.id === targetId;
 
   if (!isAdmin && !isSelf) {
-    throw new AppError(403, "Access denied");
+    return next(new AppError(403, "Access denied"));
   }
   next();
 }
