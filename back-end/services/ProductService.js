@@ -85,8 +85,52 @@ class ProductService {
   // product stock handling
 
   async search({ name, brand, category }) {
-    //raw sql, filter by name, brand, category. no soft deleted.
+    let sql = `
+      SELECT
+        p.id,
+        p.name,
+        p.description,
+        p.unitPrice,
+        p.quantity,
+        p.imgUrl,
+        p.dateAdded,
+        p.isDeleted,
+        p.createdAt,
+        p.brandId,
+        p.categoryId,
+        b.name AS brand,
+        c.name AS category
+      FROM products p
+      INNER JOIN brands b ON p.brandId = b.id
+      INNER JOIN categories c ON p.categoryId = c.id
+      WHERE p.isDeleted = 0
+    `;
+
+    const replacements = {};
+
+    if (name) {
+      sql += ` AND p.name LIKE :name`;
+      replacements.name = `%${name}%`;
+    }
+
+    if (brand) {
+      sql += ` AND b.name LIKE :brand`;
+      replacements.brand = `%${brand}%`;
+    }
+
+    if (category) {
+      sql += ` AND c.name LIKE :category`;
+      replacements.category = `%${category}%`;
+    }
+
+    const products = await this.sequelize.query(sql, {
+      replacements,
+      type: QueryTypes.SELECT,
+    });
+
+    return products;
   }
+  //add pagination if time
 }
 
 module.exports = ProductService;

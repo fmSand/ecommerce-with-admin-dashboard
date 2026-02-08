@@ -49,10 +49,19 @@ async function softDeleteProduct(req, res) {
   return success(res, 200, "Product deleted successfully");
 }
 
+async function searchProducts(req, res) {
+  const products = await productService.search(req.body);
+  return success(res, 200, "Search completed", {
+    count: products.length,
+    products,
+  });
+}
+
 module.exports = {
   getAllProducts,
   getProductById,
   createProduct,
   updateProduct,
   softDeleteProduct,
+  searchProducts,
 };
