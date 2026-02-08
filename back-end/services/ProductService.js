@@ -83,6 +83,19 @@ class ProductService {
   }
 
   // product stock handling
+  async checkStock(productId, requestedQuantity, transaction) {
+    //for cart/checkoutservice
+    //transaction + lock?
+    //check if product exists and is not deleted
+    //check quantety vs requestedQuantity (insufficient stock error)
+
+  }
+
+  async decrementStock() {
+    //for cart/checkoutservice
+    //.decrement() quantity for each product (use for of since foreach doesn't work with async/await)
+    //transaction?
+  }
 
   async search({ name, brand, category }) {
     let sql = `
