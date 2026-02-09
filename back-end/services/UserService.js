@@ -46,9 +46,21 @@ class UserService {
   }
 
   async update(userId, updates) {
-    await this.User.update(updates, { where: { id: userId } });
-    const updatedUser = await this.getById(userId);
-    return updatedUser;
+    const allowedFields = ["firstName", "lastName", "username", "email", "address", "city", "phone"];
+    const allowed = Object.fromEntries(Object.entries(updates).filter(([key]) => allowedFields.includes(key)));
+
+    const user = await this.User.findByPk(userId, {
+      include: [
+        { model: this.Role, as: "role" },
+        { model: this.Membership, as: "membership" },
+      ],
+      attributes: { exclude: ["passwordHash"] },
+    });
+
+    if (!user) throw new AppError(404, "User not found");
+
+    await user.update(allowed);
+    return user;
   }
 
   async updateRole(userId, roleId) {
