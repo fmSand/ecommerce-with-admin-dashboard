@@ -1,41 +1,61 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+require("dotenv").config();
+const express = require("express");
+const logger = require("morgan");
+const db = require("./models");
+const { AppError } = require("./utils");
+const { errorHandler } = require("./middleware");
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// ROUTE IMPORTS
+const initRouter = require("./routes/init");
+const authRouter = require("./routes/auth");
+const usersRouter = require("./routes/users");
+const productsRouter = require("./routes/products");
+const brandsRouter = require("./routes/brands");
+const categoriesRouter = require("./routes/categories");
+const cartRouter = require("./routes/cart");
+const ordersRouter = require("./routes/orders");
+const orderStatusesRouter = require("./routes/ordersStatuses");
+const membershipsRouter = require("./routes/memberships");
+const rolesRouter = require("./routes/roles");
+const searchRouter = require("./routes/search");
 
-var app = express();
+// DB SYNC
+const db = require("./models");
+db.sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("Database synced");
+  })
+  .catch((err) => {
+    console.error("Database sync failed:", err);
+    process.exit(1);
+  });
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+const app = express();
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// ROUTES
+app.use("/init", initRouter);
+app.use("/auth", authRouter);
+app.use("/users", usersRouter);
+app.use("/products", productsRouter);
+app.use("/brands", brandsRouter);
+app.use("/categories", categoriesRouter);
+app.use("/cart", cartRouter);
+app.use("/orders", ordersRouter);
+app.use("/order-statuses", orderStatusesRouter);
+app.use("/memberships", membershipsRouter);
+app.use("/roles", rolesRouter);
+app.use("/search", searchRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+// ERROR HANDLING
+app.use((req, res, next) => {
+  next(new AppError(404, `Route not found: ${req.method} ${req.originalUrl}`));
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+app.use(errorHandler);
 
 module.exports = app;
