@@ -1,6 +1,5 @@
 const router = require("express").Router();
-const { authenticate, requireAdmin } = require("../middleware/auth");
-const { asyncHandler } = require("../middleware/asyncHandler");
+const { asyncHandler, authenticate, requireAdmin } = require("../middleware");
 const {
   getAllMemberships,
   getMembershipById,

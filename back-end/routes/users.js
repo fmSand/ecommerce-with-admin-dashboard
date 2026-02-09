@@ -1,12 +1,6 @@
 const router = require("express").Router();
-const { authenticate, requireAdmin, requireSelfOrAdmin } = require("../middleware/auth");
-const { asyncHandler } = require("../middleware/asyncHandler");
-const {
-  getAllUsers,
-  getUserById,
-  updateUser,
-  updateUserRole,
-} = require("../controllers/userController");
+const { asyncHandler, authenticate, requireAdmin, requireSelfOrAdmin } = require("../middleware");
+const { getAllUsers, getUserById, updateUser, updateUserRole } = require("../controllers/userController");
 
 router.get("/", authenticate, requireAdmin, asyncHandler(getAllUsers));
 router.put("/:id/role", authenticate, requireAdmin, asyncHandler(updateUserRole));
