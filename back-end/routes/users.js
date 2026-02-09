@@ -6,18 +6,18 @@ const { getAllUsers, getUserById, updateUser, updateUserRole } = require("../con
 router.get("/", authenticate, requireAdmin, asyncHandler(getAllUsers));
 router.put(
   "/:id/role",
-  validate(idParamSchema, "params"),
   authenticate,
   requireAdmin,
+  validate(idParamSchema, "params"),
   validate(updateRoleSchema),
   asyncHandler(updateUserRole),
 );
 router.get("/:id", authenticate, requireSelfOrAdmin, validate(idParamSchema, "params"), asyncHandler(getUserById));
 router.put(
   "/:id",
-  validate(idParamSchema, "params"),
   authenticate,
   requireSelfOrAdmin,
+  validate(idParamSchema, "params"),
   validate(updateUserSchema),
   asyncHandler(updateUser),
 );
