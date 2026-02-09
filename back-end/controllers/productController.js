@@ -16,10 +16,12 @@ async function getAllProducts(req, res) {
 }
 
 async function getProductById(req, res) {
-  const product = await productService.getById(req.params.id, { includeDeleted: false });
+  const isAdmin = req.user?.roleId === ADMIN_ROLE_ID;
+  const product = await productService.getById(req.params.id, {
+    includeDeleted: isAdmin,
+  });
   return success(res, 200, "Product found", { product });
 }
-
 async function createProduct(req, res) {
   const { name, description, unitPrice, quantity, imgUrl, dateAdded, brandId, categoryId } = req.body;
 

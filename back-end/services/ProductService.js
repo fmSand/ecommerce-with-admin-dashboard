@@ -41,15 +41,31 @@ class ProductService {
   }
 
   async getById(id, { includeDeleted = false } = {}) {
-    const where = includeDeleted ? { id } : { id, isDeleted: false };
+    const deletedClause = includeDeleted ? "" : "AND p.isDeleted = 0";
 
-    const product = await this.Product.findOne({
-      where,
-      include: [
-        { model: this.Brand, as: "brand", attributes: ["name"] },
-        { model: this.Category, as: "category", attributes: ["name"] },
-      ],
-    });
+    const [product] = await this.sequelize.query(
+      `
+    SELECT
+      p.id,
+      p.name,
+      p.description,
+      p.unitPrice,
+      p.quantity,
+      p.imgUrl,
+      p.dateAdded,
+      p.isDeleted,
+      p.createdAt,
+      p.brandId,
+      p.categoryId,
+      b.name AS brand,
+      c.name AS category
+    FROM products p
+    INNER JOIN brands b ON p.brandId = b.id
+    INNER JOIN categories c ON p.categoryId = c.id
+    WHERE p.id = :id ${deletedClause}
+    `,
+      { replacements: { id }, type: QueryTypes.SELECT },
+    );
 
     if (!product) throw new AppError(404, "Product not found");
     return product;
@@ -71,9 +87,11 @@ class ProductService {
   }
 
   async update(id, updates) {
-    const { isDeleted, ...safeUpdates } = updates;
-    await this.Product.update(safeUpdates, { where: { id } });
-    return this.getById(id);
+    const exists = await this.Product.findByPk(id);
+    if (!exists) throw new AppError(404, "Product not found");
+
+    await this.Product.update(updates, { where: { id } });
+    return this.getById(id, { includeDeleted: true });
   }
 
   async softDelete(id) {
@@ -88,7 +106,6 @@ class ProductService {
     //transaction + lock?
     //check if product exists and is not deleted
     //check quantety vs requestedQuantity (insufficient stock error)
-
   }
 
   async decrementStock() {
