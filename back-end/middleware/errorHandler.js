@@ -10,7 +10,7 @@ function toDetails(err) {
   }));
 }
 
-module.exports = function errorHandler(err, req, res, next) {
+function errorHandler(err, req, res, next) {
   if (process.env.NODE_ENV === "development") console.error(err?.stack || err);
 
   if (err instanceof AppError) {
@@ -44,4 +44,6 @@ module.exports = function errorHandler(err, req, res, next) {
   }
 
   return error(res, 500, "Internal server error");
-};
+}
+
+module.exports = { errorHandler };
