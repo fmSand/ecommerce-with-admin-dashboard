@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { authenticate, validate, requireAdmin, asyncHandler } = require("../middleware");
+const { asyncHandler, validate, authenticate, requireAdmin, optionalAuth } = require("../middleware");
 const { idParamSchema, createProductSchema, updateProductSchema } = require("../validation");
 const {
   getAllProducts,
@@ -9,8 +9,8 @@ const {
   softDeleteProduct,
 } = require("../controllers/productController");
 
-router.get("/", asyncHandler(getAllProducts));
-router.get("/:id", validate(idParamSchema, "params"), asyncHandler(getProductById));
+router.get("/", optionalAuth, asyncHandler(getAllProducts));
+router.get("/:id", validate(idParamSchema, "params"), optionalAuth, asyncHandler(getProductById));
 router.post("/", authenticate, requireAdmin, validate(createProductSchema), asyncHandler(createProduct));
 router.put(
   "/:id",
@@ -21,6 +21,5 @@ router.put(
   asyncHandler(updateProduct),
 );
 router.delete("/:id", authenticate, requireAdmin, validate(idParamSchema, "params"), asyncHandler(softDeleteProduct));
-//add optional auth middleware for get routes
 
 module.exports = router;
