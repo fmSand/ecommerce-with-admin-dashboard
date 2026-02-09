@@ -38,4 +38,25 @@ function requireSelfOrAdmin(req, res, next) {
   next();
 }
 
-module.exports = { authenticate, requireAdmin, requireSelfOrAdmin };
+function optionalAuth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    req.user = null;
+    return next();
+  }
+  if (!authHeader.startsWith("Bearer ")) {
+    return next(new AppError(401, "Invalid Authorization header format"));
+  }
+
+  try {
+    req.user = verifyToken(authHeader.split(" ")[1]);
+    return next();
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return next(new AppError(401, "Token expired"));
+    }
+    return next(new AppError(401, "Invalid token"));
+  }
+}
+
+module.exports = { authenticate, requireAdmin, requireSelfOrAdmin, optionalAuth };
