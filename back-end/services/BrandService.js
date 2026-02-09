@@ -21,8 +21,10 @@ class BrandService {
   }
 
   async update(id, name) {
-    await this.Brand.update({ name }, { where: { id } });
-    return this.getById(id);
+    const brand = await this.Brand.findByPk(id);
+    if (!brand) throw new AppError(404, "Brand not found");
+    await brand.update({ name });
+    return brand;
   }
 
   async delete(id) {

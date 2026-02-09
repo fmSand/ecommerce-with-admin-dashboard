@@ -21,9 +21,12 @@ class CategoryService {
   }
 
   async update(id, name) {
-    await this.Category.update({ name }, { where: { id } });
-    return this.getById(id);
+    const category = await this.Category.findByPk(id);
+    if (!category) throw new AppError(404, "Category not found");
+    await category.update({ name });
+    return category;
   }
+  
   async delete(id) {
     const category = await this.Category.findByPk(id);
     if (!category) throw new AppError(404, "Category not found");
