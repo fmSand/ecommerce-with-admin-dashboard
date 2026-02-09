@@ -29,9 +29,7 @@ async function updateBrand(req, res) {
 
 async function deleteBrand(req, res) {
   const { id } = req.params;
-
   await brandService.delete(id);
-
   return success(res, 200, "Brand deleted successfully");
 }
 

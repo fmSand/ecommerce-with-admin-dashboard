@@ -1,19 +1,19 @@
 const router = require("express").Router();
-const { authenticate, requireAdmin } = require("../middleware/auth");
-const { asyncHandler } = require("../middleware/asyncHandler");
-const {
-  getAllBrands,
-  getBrandById,
-  createBrand,
-  updateBrand,
-  deleteBrand,
-} = require("../controllers/brandController");
+const { asyncHandler, validate, authenticate, requireAdmin  } = require("../middleware");
+const { getAllBrands, getBrandById, createBrand, updateBrand, deleteBrand } = require("../controllers/brandController");
+const { idParamSchema, createBrandSchema, updateBrandSchema } = require("../validation");
 
 router.get("/", asyncHandler(getAllBrands));
-router.get("/:id", asyncHandler(getBrandById));
-router.post("/", authenticate, requireAdmin, asyncHandler(createBrand));
-router.put("/:id", authenticate, requireAdmin, asyncHandler(updateBrand));
-router.delete("/:id", authenticate, requireAdmin, asyncHandler(deleteBrand));
-//add param validation etc
+router.get("/:id", validate(idParamSchema, "params"), asyncHandler(getBrandById));
+router.post("/", authenticate, requireAdmin, validate(createBrandSchema), asyncHandler(createBrand));
+router.put(
+  "/:id",
+  validate(idParamSchema, "params"),
+  authenticate,
+  requireAdmin,
+  validate(updateBrandSchema),
+  asyncHandler(updateBrand),
+);
+router.delete("/:id", validate(idParamSchema, "params"), authenticate, requireAdmin, asyncHandler(deleteBrand));
 
 module.exports = router;
