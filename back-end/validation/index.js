@@ -5,6 +5,7 @@ const { createBrandSchema, updateBrandSchema } = require("./brandSchema");
 const { updateDiscountSchema } = require("./membershipSchema");
 const { createCategorySchema, updateCategorySchema } = require("./categorySchema");
 const { createProductSchema, updateProductSchema } = require("./productSchema");
+const { searchProductsSchema } = require("./searchSchema");
 
 //category,product,membership,role?,search,order,cart
 
@@ -22,4 +23,5 @@ module.exports = {
   updateCategorySchema,
   createProductSchema,
   updateProductSchema,
+  searchProductsSchema,
 };
