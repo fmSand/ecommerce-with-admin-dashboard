@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { asyncHandler, authenticate, requireAdmin } = require("../middleware");
+const { idParamSchema, updateDiscountSchema } = require("../validation");
 const {
   getAllMemberships,
   getMembershipById,
@@ -7,7 +8,14 @@ const {
 } = require("../controllers/membershipController");
 
 router.get("/", asyncHandler(getAllMemberships));
-router.get("/:id", asyncHandler(getMembershipById));
-router.put("/:id", authenticate, requireAdmin, asyncHandler(updateMembershipDiscount));
-//validate param etc
+router.get("/:id", validate(idParamSchema, "params"), asyncHandler(getMembershipById));
+router.put(
+  "/:id",
+  authenticate,
+  requireAdmin,
+  validate(idParamSchema, "params"),
+  validate(updateDiscountSchema),
+  asyncHandler(updateMembershipDiscount),
+);
+
 module.exports = router;

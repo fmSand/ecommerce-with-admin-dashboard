@@ -23,14 +23,12 @@ class MembershipService {
     return this.Membership.findAll({ order: [["threshold", "ASC"]] });
   }
 
-  async updateDiscount(id, updates) {
+  async updateDiscount(id, discountPercent) {
     const membership = await this.Membership.findByPk(id);
     if (!membership) throw new AppError(404, "Membership not found");
-    await membership.update({ discountPercent: updates.discountPercent });
+    await membership.update({ discountPercent });
     return membership;
   }
-
-  //delete()?
 
   async determineMembershipTier(totalPurchasedQuantity, transaction) {
     const membership = await this.Membership.findOne({

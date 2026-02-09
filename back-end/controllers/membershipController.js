@@ -17,7 +17,7 @@ async function getMembershipById(req, res) {
 async function updateMembershipDiscount(req, res) {
   const { id } = req.params;
   const { discountPercent } = req.body;
-  const membership = await membershipService.updateDiscount(id, { discountPercent });
+  const membership = await membershipService.updateDiscount(id, discountPercent);
   return success(res, 200, "Membership updated successfully", { membership });
 }
 
