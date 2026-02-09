@@ -10,8 +10,4 @@ const paginationSchema = {
   limit: Joi.number().integer().min(1).max(100).default(20),
 };
 
-const quantitySchema = Joi.object({
-  quantity: Joi.number().integer().min(1).required(),
-});
-
-module.exports = { idParamSchema, paginationSchema, quantitySchema };
+module.exports = { idParamSchema, paginationSchema };
