@@ -7,8 +7,7 @@ const { createCategorySchema, updateCategorySchema } = require("./categorySchema
 const { createProductSchema, updateProductSchema } = require("./productSchema");
 const { searchProductsSchema } = require("./searchSchema");
 const { addItemSchema, updateItemSchema, productIdParamSchema } = require("./cartSchema");
-
-//role?,order
+const { updateStatusSchema } = require("./orderSchema");
 
 module.exports = {
   registerSchema,
@@ -28,4 +27,5 @@ module.exports = {
   addItemSchema,
   updateItemSchema,
   productIdParamSchema,
+  updateStatusSchema,
 };
