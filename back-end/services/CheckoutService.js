@@ -78,9 +78,10 @@ class CheckoutService {
       await this.cartService.clearCart(cartId, transaction);
       //change stock here?
       //get and return order details - orderservice.getByIdForUser
+      const orderWithDetails = await this.orderService.getByIdForUser(order.id, userId, transaction);
 
       await transaction.commit();
-      return order;
+      return orderWithDetails;
     } catch (err) {
       await transaction.rollback();
       throw err;
