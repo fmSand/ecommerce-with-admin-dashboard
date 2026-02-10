@@ -30,7 +30,7 @@ class MembershipService {
     return membership;
   }
 
-  async determineMembershipTier(totalPurchasedQuantity, transaction) {
+  async determineMembershipTier(totalPurchasedQuantity, transaction = null) {
     const membership = await this.Membership.findOne({
       where: {
         threshold: { [Op.lte]: totalPurchasedQuantity },
