@@ -80,12 +80,18 @@ class UserService {
     await user.update({ membershipId }, { transaction });
   }
 
-  // update total purchases (for checkout).
-  async updateTotalPurchasedQuantity(userId, quantityToAdd, transaction) {
-    const user = await this.User.findByPk(userId, { transaction });
+  async incrementTotalPurchasedQuantity(userId, purchasedQuantity, transaction) {
+    const user = await this.User.findByPk(userId, {
+      lock: transaction.LOCK.UPDATE,
+      transaction,
+    });
     if (!user) throw new AppError(404, "User not found");
-    const newTotal = user.totalPurchasedQuantity + quantityToAdd;
-    await user.update({ totalPurchasedQuantity: newTotal }, { transaction });
+    user.totalPurchasedQuantity += purchasedQuantity;
+    await user.save({ transaction });
+    return {
+      membershipId: user.membershipId,
+      totalPurchasedQuantity: user.totalPurchasedQuantity,
+    };
   }
 }
 
