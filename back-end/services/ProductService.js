@@ -5,8 +5,6 @@ class ProductService {
   constructor(db) {
     this.sequelize = db.sequelize;
     this.Product = db.Product;
-    this.Brand = db.Brand;
-    this.Category = db.Category;
   }
 
   async getAll({ includeDeleted = false } = {}) {
