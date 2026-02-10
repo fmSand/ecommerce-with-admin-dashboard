@@ -108,18 +108,25 @@ class ProductService {
     await product.update({ isDeleted: true });
   }
 
-  // product stock handling
-  async checkStock(productId, requestedQuantity, transaction) {
-    //for cart/checkoutservice
-    //transaction + lock?
-    //check if product exists and is not deleted
-    //check quantety vs requestedQuantity (insufficient stock error)
+  async lockAndValidateStock(productId, requestedQuantity, transaction) {
+    const product = await this.Product.findByPk(productId, { transaction, lock: transaction.LOCK.UPDATE });
+
+    if (!product) throw new AppError(404, "Product not found");
+    if (product.isDeleted) throw new AppError(400, "Product no longer available");
+    if (product.quantity < requestedQuantity) {
+      throw new AppError(400, `Insufficient stock. Available: ${product.quantity}`);
+    }
+    return product;
   }
 
-  async decrementStock() {
-    //for cart/checkoutservice
-    //.decrement() quantity for each product (use for of since foreach doesn't work with async/await)
-    //transaction?
+  async decrementStock(productUpdates, transaction) {
+    for (const { id, quantity } of productUpdates) {
+      await this.Product.decrement("quantity", {
+        by: quantity,
+        where: { id },
+        transaction,
+      });
+    }
   }
 
   async search({ name, brand, category }, { includeDeleted = false } = {}) {
