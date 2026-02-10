@@ -1,5 +1,5 @@
 const { QueryTypes } = require("sequelize");
-const { AppError } = require("../utils");
+const { AppError } = require("../utils/AppError");
 
 class ProductService {
   constructor(db) {

@@ -1,4 +1,4 @@
-const { AppError } = require("../utils");
+const { AppError } = require("../utils/AppError");
 
 class BrandService {
   constructor(db) {

@@ -1,4 +1,4 @@
-const { AppError } = require("../utils");
+const { AppError } = require("../utils/AppError");
 const { hashPassword, verifyPassword } = require("../utils/hash");
 const { generateToken } = require("../utils/jwt");
 const { USER_ROLE_ID } = require("../constants/roles");

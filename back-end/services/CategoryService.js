@@ -1,4 +1,4 @@
-const { AppError } = require("../utils");
+const { AppError } = require("../utils/AppError");
 
 class CategoryService {
   constructor(db) {
@@ -26,7 +26,7 @@ class CategoryService {
     await category.update({ name });
     return category;
   }
-  
+
   async delete(id) {
     const category = await this.Category.findByPk(id);
     if (!category) throw new AppError(404, "Category not found");
