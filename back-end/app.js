@@ -20,7 +20,6 @@ const rolesRouter = require("./routes/roles");
 const searchRouter = require("./routes/search");
 
 // DB SYNC
-const db = require("./models");
 db.sequelize
   .sync({ force: false })
   .then(() => {
