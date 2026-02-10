@@ -23,7 +23,6 @@ module.exports = (sequelize, DataTypes) => {
       orderStatusId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 1,
       },
     },
     {
