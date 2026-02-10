@@ -1,6 +1,6 @@
 const { updateUserSchema, updateRoleSchema } = require("./userSchema");
 const { registerSchema, loginSchema } = require("./authSchema");
-const { idParamSchema, paginationSchema, idParamSchema } = require("./commonSchema");
+const { idParamSchema, paginationSchema } = require("./commonSchema");
 const { createBrandSchema, updateBrandSchema } = require("./brandSchema");
 const { updateDiscountSchema } = require("./membershipSchema");
 const { createCategorySchema, updateCategorySchema } = require("./categorySchema");
