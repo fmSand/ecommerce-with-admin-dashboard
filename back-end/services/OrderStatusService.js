@@ -11,7 +11,7 @@ class OrderStatusService {
     return status;
   }
 
-  async getByName(name, transaction) {
+  async getByName(name, transaction = null) {
     const status = await this.OrderStatus.findOne({
       where: { name },
       transaction,
