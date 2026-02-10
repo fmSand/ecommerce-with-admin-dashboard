@@ -11,13 +11,11 @@ class CheckoutService {
   }
 
   async checkout(userId) {
-    //transaction
-    //lock rows
     const transaction = await this.sequelize.transaction();
 
     try {
       //validate and get cart - cartservice
-      const cart = await this.cartService.getCartWithItems(userId);
+      const cartItems = await this.cartService.getCartItemsForCheckout(userId, transaction);
       //build Order - orderservice
       //check stock quantity - productservice
       //check membership - user/membershipservice

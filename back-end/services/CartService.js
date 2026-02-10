@@ -7,25 +7,27 @@ class CartService {
     this.CartItem = db.CartItem;
     this.Product = db.Product;
   }
+  get #cartInclude() {
+    return [
+      {
+        model: this.CartItem,
+        as: "items",
+        include: [
+          {
+            model: this.Product,
+            as: "product",
+            attributes: ["id", "name", "unitPrice", "quantity", "imgUrl", "isDeleted"],
+          },
+        ],
+      },
+    ];
+  }
 
   async getCartWithItems(userId) {
     const cart = await this.Cart.findOne({
       where: { userId },
-      include: [
-        {
-          model: this.CartItem,
-          as: "items",
-          include: [
-            {
-              model: this.Product,
-              as: "product",
-              attributes: ["id", "name", "unitPrice", "quantity", "imgUrl", "isDeleted"],
-            },
-          ],
-        },
-      ],
+      include: this.#cartInclude,
     });
-
     return cart || { userId, items: [] };
   }
 
@@ -58,28 +60,14 @@ class CartService {
 
       if (!wasCreated) {
         const newQuantity = cartItem.quantity + quantity;
-
         if (newQuantity > product.quantity) {
           throw new AppError(400, `Insufficient stock. Available: ${product.quantity}`);
         }
-
         await cartItem.update({ quantity: newQuantity }, { transaction });
       }
 
       const updatedCart = await this.Cart.findByPk(cart.id, {
-        include: [
-          {
-            model: this.CartItem,
-            as: "items",
-            include: [
-              {
-                model: this.Product,
-                as: "product",
-                attributes: ["id", "name", "unitPrice", "quantity", "imgUrl", "isDeleted"],
-              },
-            ],
-          },
-        ],
+        include: this.#cartInclude,
         transaction,
       });
 
@@ -111,7 +99,6 @@ class CartService {
         lock: transaction.LOCK.UPDATE,
         transaction,
       });
-
       if (!product) throw new AppError(404, "Product not found");
       if (product.isDeleted && quantity > cartItem.quantity) {
         throw new AppError(400, "Product is no longer available");
@@ -123,19 +110,7 @@ class CartService {
       await cartItem.update({ quantity }, { transaction });
 
       const updatedCart = await this.Cart.findByPk(cart.id, {
-        include: [
-          {
-            model: this.CartItem,
-            as: "items",
-            include: [
-              {
-                model: this.Product,
-                as: "product",
-                attributes: ["id", "name", "unitPrice", "quantity", "imgUrl", "isDeleted"],
-              },
-            ],
-          },
-        ],
+        include: this.#cartInclude,
         transaction,
       });
 
@@ -164,19 +139,7 @@ class CartService {
       if (deletedCount === 0) throw new AppError(404, "Item not in cart");
 
       const updatedCart = await this.Cart.findByPk(cart.id, {
-        include: [
-          {
-            model: this.CartItem,
-            as: "items",
-            include: [
-              {
-                model: this.Product,
-                as: "product",
-                attributes: ["id", "name", "unitPrice", "quantity", "imgUrl", "isDeleted"],
-              },
-            ],
-          },
-        ],
+        include: this.#cartInclude,
         transaction,
       });
 
@@ -193,6 +156,24 @@ class CartService {
       where: { cartId },
       transaction,
     });
+  }
+
+  async getCartItemsForCheckout(userId, transaction) {
+    const cart = await this.Cart.findOne({
+      where: { userId },
+      transaction,
+    });
+    if (!cart) throw new AppError(404, "Cart not found");
+
+    const items = await this.CartItem.findAll({
+      where: { cartId: cart.id },
+      transaction,
+    });
+
+    if (items.length === 0) {
+      throw new AppError(400, "Cart is empty");
+    }
+    return { cartId: cart.id, items };
   }
 }
 
