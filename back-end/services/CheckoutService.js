@@ -21,12 +21,15 @@ class CheckoutService {
       //check membership - user/membershipservice
       const user = await this.userService.getById(userId, transaction);
       const membership = await this.membershipService.getById(user.membershipId, transaction);
+      const status = await this.orderStatusService.getByName("In Progress", transaction);
       //change orderstatus - orderstatusservice
       // create order and order items, with discoint and membershipsnapshot.
-      //handle stock /decrement - productservice
+      //handle stock /decrement (before or after clearing cart?)- productservice
       //calculate and update user membership if needed - membershipservice/userservice.
+      const quantityToAdd = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      const updatedUser = await this.userService.updateTotalPurchasedQuantity(userId, quantityToAdd, transaction);
       const newMembership = await this.membershipService.determineMembershipTier(
-        user.totalPurchasedQuantity,
+        updatedUser.totalPurchasedQuantity,
         transaction,
       );
       await this.userService.updateUserMembership(userId, newMembership, transaction);
