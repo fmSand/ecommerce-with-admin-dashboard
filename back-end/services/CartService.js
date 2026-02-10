@@ -80,46 +80,23 @@ class CartService {
   }
 
   async updateItemQuantity(userId, productId, quantity) {
-    const transaction = await this.sequelize.transaction();
+    const cart = await this.Cart.findOne({ where: { userId } });
+    if (!cart) throw new AppError(404, "Cart not found");
 
-    try {
-      const cart = await this.Cart.findOne({
-        where: { userId },
-        transaction,
-      });
-      if (!cart) throw new AppError(404, "Cart not found");
+    const cartItem = await this.CartItem.findOne({
+      where: { cartId: cart.id, productId },
+    });
+    if (!cartItem) throw new AppError(404, "Item not in cart");
 
-      const cartItem = await this.CartItem.findOne({
-        where: { cartId: cart.id, productId },
-        transaction,
-      });
-      if (!cartItem) throw new AppError(404, "Item not in cart");
-
-      const product = await this.Product.findByPk(productId, {
-        lock: transaction.LOCK.UPDATE,
-        transaction,
-      });
-      if (!product) throw new AppError(404, "Product not found");
-      if (product.isDeleted && quantity > cartItem.quantity) {
-        throw new AppError(400, "Product is no longer available");
-      }
-      if (!product.isDeleted && quantity > product.quantity) {
-        throw new AppError(400, `Insufficient stock. Available: ${product.quantity}`);
-      }
-
-      await cartItem.update({ quantity }, { transaction });
-
-      const updatedCart = await this.Cart.findByPk(cart.id, {
-        include: this.#cartInclude,
-        transaction,
-      });
-
-      await transaction.commit();
-      return updatedCart;
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
+    const product = await this.Product.findByPk(productId);
+    if (!product) throw new AppError(404, "Product not found");
+    if (product.isDeleted) throw new AppError(400, "Product is no longer available");
+    if (quantity > product.quantity) {
+      throw new AppError(400, `Insufficient stock. Available: ${product.quantity}`);
     }
+
+    await cartItem.update({ quantity });
+    return this.Cart.findByPk(cart.id, { include: this.#cartInclude });
   }
 
   async removeItem(userId, productId) {
