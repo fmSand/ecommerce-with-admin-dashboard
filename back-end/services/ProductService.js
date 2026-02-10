@@ -10,30 +10,35 @@ class ProductService {
   }
 
   async getAll({ includeDeleted = false } = {}) {
-    const deletedClause = includeDeleted ? "" : "WHERE p.isDeleted = 0";
+    const conditions = [];
 
+    if (!includeDeleted) {
+      conditions.push("p.isDeleted = 0");
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
     const products = await this.sequelize.query(
       `
-      SELECT
-        p.id,
-        p.name,
-        p.description,
-        p.unitPrice,
-        p.quantity,
-        p.imgUrl,
-        p.dateAdded,
-        p.isDeleted,
-        p.createdAt,
-        p.brandId,
-        p.categoryId,
-        b.name AS brand,
-        c.name AS category
-      FROM products p
-      INNER JOIN brands b ON p.brandId = b.id
-      INNER JOIN categories c ON p.categoryId = c.id
-      ${deletedClause}
-      ORDER BY p.id ASC
-      `,
+    SELECT
+      p.id,
+      p.name,
+      p.description,
+      p.unitPrice,
+      p.quantity,
+      p.imgUrl,
+      p.dateAdded,
+      p.isDeleted,
+      p.createdAt,
+      p.brandId,
+      p.categoryId,
+      b.name AS brand,
+      c.name AS category
+    FROM products p
+    INNER JOIN brands b ON p.brandId = b.id
+    INNER JOIN categories c ON p.categoryId = c.id
+    ${whereClause}
+    ORDER BY p.id ASC
+    `,
       { type: QueryTypes.SELECT },
     );
 
@@ -41,7 +46,12 @@ class ProductService {
   }
 
   async getById(id, { includeDeleted = false } = {}) {
-    const deletedClause = includeDeleted ? "" : "AND p.isDeleted = 0";
+    const conditions = ["p.id = :id"];
+    const replacements = { id };
+
+    if (!includeDeleted) {
+      conditions.push("p.isDeleted = 0");
+    }
 
     const [product] = await this.sequelize.query(
       `
@@ -62,9 +72,9 @@ class ProductService {
     FROM products p
     INNER JOIN brands b ON p.brandId = b.id
     INNER JOIN categories c ON p.categoryId = c.id
-    WHERE p.id = :id ${deletedClause}
+    WHERE ${conditions.join(" AND ")}
     `,
-      { replacements: { id }, type: QueryTypes.SELECT },
+      { replacements, type: QueryTypes.SELECT },
     );
 
     if (!product) throw new AppError(404, "Product not found");
@@ -138,7 +148,6 @@ class ProductService {
     }
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-
     const products = await this.sequelize.query(
       `
     SELECT
