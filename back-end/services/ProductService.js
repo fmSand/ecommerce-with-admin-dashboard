@@ -114,49 +114,54 @@ class ProductService {
     //transaction?
   }
 
-  async search({ name, brand, category }) {
-    let sql = `
-      SELECT
-        p.id,
-        p.name,
-        p.description,
-        p.unitPrice,
-        p.quantity,
-        p.imgUrl,
-        p.dateAdded,
-        p.isDeleted,
-        p.createdAt,
-        p.brandId,
-        p.categoryId,
-        b.name AS brand,
-        c.name AS category
-      FROM products p
-      INNER JOIN brands b ON p.brandId = b.id
-      INNER JOIN categories c ON p.categoryId = c.id
-      WHERE p.isDeleted = 0
-    `;
-
+  async search({ name, brand, category }, { includeDeleted = false } = {}) {
+    const conditions = [];
     const replacements = {};
 
+    if (!includeDeleted) {
+      conditions.push("p.isDeleted = 0");
+    }
+
     if (name) {
-      sql += ` AND p.name LIKE :name`;
+      conditions.push("p.name LIKE :name");
       replacements.name = `%${name}%`;
     }
 
     if (brand) {
-      sql += ` AND b.name LIKE :brand`;
+      conditions.push("b.name LIKE :brand");
       replacements.brand = `%${brand}%`;
     }
 
     if (category) {
-      sql += ` AND c.name LIKE :category`;
+      conditions.push("c.name LIKE :category");
       replacements.category = `%${category}%`;
     }
 
-    const products = await this.sequelize.query(sql, {
-      replacements,
-      type: QueryTypes.SELECT,
-    });
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+    const products = await this.sequelize.query(
+      `
+    SELECT
+      p.id,
+      p.name,
+      p.description,
+      p.unitPrice,
+      p.quantity,
+      p.imgUrl,
+      p.dateAdded,
+      p.isDeleted,
+      p.createdAt,
+      p.brandId,
+      p.categoryId,
+      b.name AS brand,
+      c.name AS category
+    FROM products p
+    INNER JOIN brands b ON p.brandId = b.id
+    INNER JOIN categories c ON p.categoryId = c.id
+    ${whereClause}
+    `,
+      { replacements, type: QueryTypes.SELECT },
+    );
 
     return products;
   }

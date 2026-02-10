@@ -52,7 +52,8 @@ async function softDeleteProduct(req, res) {
 }
 
 async function searchProducts(req, res) {
-  const products = await productService.search(req.body);
+  const isAdmin = req.user?.roleId === ADMIN_ROLE_ID;
+  const products = await productService.search(req.body, { includeDeleted: isAdmin });
   return success(res, 200, "Search completed", {
     count: products.length,
     products,
