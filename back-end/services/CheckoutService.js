@@ -15,7 +15,7 @@ class CheckoutService {
 
     try {
       //validate and get cart - cartservice
-      const cartItems = await this.cartService.getCartItemsForCheckout(userId, transaction);
+      const { cartId, items: cartItems } = await this.cartService.getCartItemsForCheckout(userId, transaction); //cartitems=array from findAll()
 
       const orderItems = [];
       //check stock quantity - productservice
@@ -58,5 +58,11 @@ class CheckoutService {
     }
   }
 }
+
+/**
+ * If time:
+ * total price for order etc (need model changes). Before cost, discount takes away this amount = final price.
+ * currency?
+ */
 
 module.exports = CheckoutService;
