@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { asyncHandler, authenticate, requireAdmin } = require("../middleware");
+const { asyncHandler, validate, authenticate, requireAdmin } = require("../middleware");
 const { idParamSchema, updateDiscountSchema } = require("../validation");
 const {
   getAllMemberships,

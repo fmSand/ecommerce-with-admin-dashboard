@@ -43,7 +43,7 @@ app.use("/users", usersRouter);
 app.use("/products", productsRouter);
 app.use("/brands", brandsRouter);
 app.use("/categories", categoriesRouter);
-app.use("/carts", cartsRouter);
+app.use("/cart", cartsRouter);
 app.use("/orders", ordersRouter);
 app.use("/order-statuses", orderStatusesRouter);
 app.use("/memberships", membershipsRouter);
