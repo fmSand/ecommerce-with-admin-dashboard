@@ -72,7 +72,21 @@ class UserService {
     return user;
   }
 
-  //delete user, update total purchases, update membership level,
+  //delete user(?)
+
+  async updateUserMembership(userId, membershipId, transaction) {
+    const user = await this.User.findByPk(userId, { transaction });
+    if (!user) throw new AppError(404, "User not found");
+    await user.update({ membershipId }, { transaction });
+  }
+
+  // update total purchases (for checkout).
+  async updateTotalPurchasedQuantity(userId, quantityToAdd, transaction) {
+    const user = await this.User.findByPk(userId, { transaction });
+    if (!user) throw new AppError(404, "User not found");
+    const newTotal = user.totalPurchasedQuantity + quantityToAdd;
+    await user.update({ totalPurchasedQuantity: newTotal }, { transaction });
+  }
 }
 
 module.exports = UserService;
