@@ -1,6 +1,8 @@
 const { db } = require("../models");
 const CartService = require("../services/CartService");
 const cartService = new CartService(db);
+const CheckoutService = require("../services/CheckoutService");
+const checkoutService = new CheckoutService(db);
 const { success } = require("../utils/response");
 
 async function getCart(req, res) {
@@ -32,7 +34,9 @@ async function removeCartItem(req, res) {
 }
 
 async function checkoutCart(req, res) {
-  //checkoutservice.chekout
+  const userId = req.user.id;
+  const order = await checkoutService.checkout(userId);
+  return success(res, 201, "Order created successfully", { order });
 }
 
 module.exports = {
