@@ -5,18 +5,24 @@ class OrderStatusService {
     this.OrderStatus = db.OrderStatus;
   }
 
-  async getAll() {
-    return this.OrderStatus.findAll();
-  }
-
   async getById(id) {
     const status = await this.OrderStatus.findByPk(id);
     if (!status) throw new AppError(404, "Order status not found");
     return status;
   }
 
-  //internal
-  async getByName() {}
+  async getByName(name, transaction) {
+    const status = await this.OrderStatus.findOne({
+      where: { name },
+      transaction,
+    });
+    if (!status) throw new AppError(500, `Order status '${name}' not initialized`);
+    return status;
+  }
+
+  async getAll() {
+    return this.OrderStatus.findAll();
+  }
 }
 
 module.exports = OrderStatusService;
