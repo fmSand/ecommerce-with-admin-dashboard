@@ -4,15 +4,20 @@ const { addItemSchema, productIdParamSchema, updateItemSchema } = require("../va
 const { getCart, addItem, updateCartItem, removeCartItem, checkoutCart } = require("../controllers/cartController");
 
 router.get("/", authenticate, asyncHandler(getCart));
-router.post("/", authenticate, validate(addItemSchema), asyncHandler(addItem));
+router.post("/items", authenticate, validate(addItemSchema), asyncHandler(addItem));
 router.put(
-  "/:productId",
+  "/items/:productId",
   authenticate,
   validate(productIdParamSchema, "params"),
   validate(updateItemSchema),
   asyncHandler(updateCartItem),
 );
-router.delete("/:productId", authenticate, validate(productIdParamSchema, "params"), asyncHandler(removeCartItem));
+router.delete(
+  "/items/:productId",
+  authenticate,
+  validate(productIdParamSchema, "params"),
+  asyncHandler(removeCartItem),
+);
 router.post("/checkout/now", authenticate, asyncHandler(checkoutCart));
 
 module.exports = router;
