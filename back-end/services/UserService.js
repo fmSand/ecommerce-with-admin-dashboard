@@ -72,11 +72,11 @@ class UserService {
     return user;
   }
 
-  async delete(userId) {
+  /*async delete(userId) { - If add. Delete user only if they have no orders. maybe add soft delete method otherwise
     const user = await this.User.findByPk(userId);
     if (!user) throw new AppError(404, "User not found");
     await user.destroy();
-  }
+  }*/
 
   //Methods for Checkout:
   async updateUserMembership(userId, membershipId, transaction) {
