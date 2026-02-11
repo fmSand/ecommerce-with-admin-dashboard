@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const OrderStatusService = require("../services/OrderStatusService");
-const orderStatusService = new OrderStatusService(db);
+const { orderStatusService } = require("../services");
 const { success } = require("../utils/response");
 
 async function getAllStatuses(req, res) {

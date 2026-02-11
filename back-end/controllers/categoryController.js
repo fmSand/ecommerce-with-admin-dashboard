@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const CategoryService = require("../services/CategoryService");
-const categoryService = new CategoryService(db);
+const { categoryService } = require("../services");
 const { success } = require("../utils/response");
 
 async function getAllCategories(req, res) {
@@ -40,4 +38,3 @@ module.exports = {
   updateCategory,
   deleteCategory,
 };
-

@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const RoleService = require("../services/RoleService");
-const roleService = new RoleService(db);
+const { roleService } = require("../services");
 const { success } = require("../utils/response");
 
 async function getAllRoles(req, res) {

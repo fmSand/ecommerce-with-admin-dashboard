@@ -1,8 +1,4 @@
-const { db } = require("../models");
-const CartService = require("../services/CartService");
-const cartService = new CartService(db);
-const CheckoutService = require("../services/CheckoutService");
-const checkoutService = new CheckoutService(db);
+const { cartService, checkoutService } = require("../services");
 const { success } = require("../utils/response");
 
 async function getCart(req, res) {

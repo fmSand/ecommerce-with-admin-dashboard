@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const UserService = require("../services/UserService");
-const userService = new UserService(db);
+const { userService } = require("../services");
 const { success } = require("../utils/response");
 
 async function getAllUsers(req, res) {

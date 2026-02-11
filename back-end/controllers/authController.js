@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const AuthService = require("../services/AuthService");
-const authService = new AuthService(db);
+const { authService } = require("../services");
 const { success } = require("../utils/response");
 
 async function register(req, res) {

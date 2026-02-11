@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const OrderService = require("../services/OrderService");
-const orderService = new OrderService(db);
+const { orderService } = require("../services");
 const { success } = require("../utils/response");
 const { ADMIN_ROLE_ID } = require("../constants/roles");
 

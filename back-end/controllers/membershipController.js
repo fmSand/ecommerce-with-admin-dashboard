@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const MembershipService = require("../services/MembershipService");
-const membershipService = new MembershipService(db);
+const { membershipService } = require("../services");
 const { success } = require("../utils/response");
 
 async function getAllMemberships(req, res) {

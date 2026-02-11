@@ -1,6 +1,4 @@
-const { db } = require("../models");
-const BrandService = require("../services/BrandService");
-const brandService = new BrandService(db);
+const { brandService } = require("../services");
 const { success } = require("../utils/response");
 
 async function getAllBrands(req, res) {
