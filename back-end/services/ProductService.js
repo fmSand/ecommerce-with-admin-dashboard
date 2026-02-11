@@ -83,8 +83,7 @@ class ProductService {
 
   async create(productData) {
     const { name, description, unitPrice, imgUrl, quantity, brandId, categoryId, dateAdded } = productData;
-
-    return this.Product.create({
+    const product = await this.Product.create({
       name,
       description,
       unitPrice,
@@ -94,6 +93,7 @@ class ProductService {
       categoryId,
       dateAdded: dateAdded ?? new Date(),
     });
+    return this.getById(product.id, { includeDeleted: true });
   }
 
   async update(id, updates) {
