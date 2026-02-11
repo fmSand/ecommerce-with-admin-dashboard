@@ -32,7 +32,7 @@ class OrderService {
     const order = await this.Order.findOne({
       where: { id: orderId, userId },
       include: [
-        { model: this.OrderItem, as: "items", include: [{ model: this.Product, as: "product" }] },
+        { model: this.OrderItem, as: "items" },
         { model: this.OrderStatus, as: "orderStatus" },
       ],
       transaction,
@@ -46,7 +46,7 @@ class OrderService {
     const order = await this.Order.findByPk(orderId, {
       include: [
         { model: this.User, as: "user", attributes: ["id", "username", "email"] },
-        { model: this.OrderItem, as: "items", include: [{ model: this.Product, as: "product" }] },
+        { model: this.OrderItem, as: "items" },
         { model: this.OrderStatus, as: "orderStatus" },
       ],
     });
