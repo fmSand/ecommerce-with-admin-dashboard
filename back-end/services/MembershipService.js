@@ -1,10 +1,9 @@
 const { AppError } = require("../utils/AppError");
+const { Op } = require("sequelize");
 
 class MembershipService {
   constructor(db) {
-    this.sequelize = db.sequelize;
     this.Membership = db.Membership;
-    //this.User = db.User; If admin should see user count for each membership
   }
 
   async getById(id, transaction = null) {

@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { asyncHandler, validate, authenticate, requireAdmin, requireSelfOrAdmin } = require("../middleware");
 const { updateUserSchema, updateRoleSchema, idParamSchema } = require("../validation");
-const { getAllUsers, getUserById, updateUser, updateUserRole } = require("../controllers/userController");
+const { getAllUsers, getUserById, updateUser, updateUserRole, deleteUser } = require("../controllers/userController");
 
 router.get("/", authenticate, requireAdmin, asyncHandler(getAllUsers));
 router.put(
@@ -21,5 +21,6 @@ router.put(
   validate(updateUserSchema),
   asyncHandler(updateUser),
 );
+router.delete("/:id", authenticate, requireAdmin, validate(idParamSchema, "params"), asyncHandler(deleteUser));
 
 module.exports = router;

@@ -6,6 +6,7 @@ class UserService {
     this.User = db.User;
     this.Role = db.Role;
     this.Membership = db.Membership;
+    this.Order = db.Order;
   }
 
   async getById(userId, transaction = null) {
@@ -72,13 +73,21 @@ class UserService {
     return user;
   }
 
-  /*async delete(userId) { - If add. Delete user only if they have no orders. maybe add soft delete method otherwise
+  async delete(userId, requestingUserId) {
     const user = await this.User.findByPk(userId);
     if (!user) throw new AppError(404, "User not found");
-    await user.destroy();
-  }*/
 
-  //Methods for Checkout:
+    if (userId === requestingUserId) {
+      throw new AppError(400, "Cannot delete your own account");
+    }
+
+    const orderCount = await this.Order.count({ where: { userId } });
+    if (orderCount > 0) {
+      throw new AppError(400, "Cannot delete user with existing orders");
+    }
+    await this.User.destroy({ where: { id: userId } });
+  }
+
   async updateUserMembership(userId, membershipId, transaction) {
     await this.User.update({ membershipId }, { where: { id: userId }, transaction });
   }

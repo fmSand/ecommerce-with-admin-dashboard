@@ -22,9 +22,15 @@ async function updateUserRole(req, res) {
   return success(res, 200, "User role updated successfully", { user });
 }
 
+async function deleteUser(req, res) {
+  await userService.delete(req.params.id, req.user.id);
+  return success(res, 200, "User deleted successfully");
+}
+
 module.exports = {
   getAllUsers,
   getUserById,
   updateUser,
   updateUserRole,
+  deleteUser,
 };
