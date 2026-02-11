@@ -72,22 +72,20 @@ class UserService {
     return user;
   }
 
-  //delete user(?)
-
-  async updateUserMembership(userId, membershipId, transaction) {
-    const user = await this.User.findByPk(userId, { transaction });
+  async delete(userId) {
+    const user = await this.User.findByPk(userId);
     if (!user) throw new AppError(404, "User not found");
-    await user.update({ membershipId }, { transaction });
+    await user.destroy();
+  }
+
+  //Methods for Checkout:
+  async updateUserMembership(userId, membershipId, transaction) {
+    await this.User.update({ membershipId }, { where: { id: userId }, transaction });
   }
 
   async incrementTotalPurchasedQuantity(userId, purchasedQuantity, transaction) {
-    const user = await this.User.findByPk(userId, {
-      lock: transaction.LOCK.UPDATE,
-      transaction,
-    });
-    if (!user) throw new AppError(404, "User not found");
-    user.totalPurchasedQuantity += purchasedQuantity;
-    await user.save({ transaction });
+    await this.User.increment({ totalPurchasedQuantity: purchasedQuantity }, { where: { id: userId }, transaction });
+    const user = await this.User.findByPk(userId, { transaction });
     return {
       membershipId: user.membershipId,
       totalPurchasedQuantity: user.totalPurchasedQuantity,
