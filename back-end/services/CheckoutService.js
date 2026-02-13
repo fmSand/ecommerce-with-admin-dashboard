@@ -14,7 +14,6 @@ class CheckoutService {
 
     try {
       const { cartId, items: cartItems } = await this.cartService.getCartItemsForCheckout(userId, transaction);
-
       const orderItems = [];
 
       for (const item of cartItems) {
@@ -42,9 +41,8 @@ class CheckoutService {
         membershipNameAtPurchase: membership.name,
         orderStatusId: inProgressStatus.id,
       };
-
       const order = await this.orderService.create(orderData, orderItems, transaction);
-      //move after order creation?
+
       await this.productService.decrementStock(
         cartItems.map((item) => ({ id: item.productId, quantity: item.quantity })),
         transaction,
@@ -67,7 +65,6 @@ class CheckoutService {
 
       await this.cartService.clearCart(cartId, transaction);
       const orderWithDetails = await this.orderService.getByIdForUser(order.id, userId, transaction);
-
       await transaction.commit();
       return orderWithDetails;
     } catch (err) {
@@ -78,7 +75,3 @@ class CheckoutService {
 }
 
 module.exports = CheckoutService;
-
-/**
- * add? priceTotal/Totalamount, subTotal
- */
