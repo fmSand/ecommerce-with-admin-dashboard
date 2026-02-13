@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: true,
+        allowNull: false,
       },
       unitPrice: {
         type: DataTypes.DECIMAL(10, 2),
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       imgUrl: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       dateAdded: {
         type: DataTypes.DATE,
