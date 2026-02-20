@@ -11,14 +11,16 @@ async function request(method, path, req, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
 
+  const contentType = response.headers.get("content-type");
+  if (!contentType?.includes("application/json")) {
+    const err = new Error(`Unexpected response (${response.status})`);
+    err.statusCode = response.status;
+    throw err;
+  }
+
   const json = await response.json();
   const statusCode = json.statuscode ?? response.status;
 
-  if (statusCode === 401) {
-    const err = new Error(json?.data?.result || "Unauthorized");
-    err.statusCode = 401;
-    throw err;
-  }
   if (!response.ok || json.status === "error") {
     const err = new Error(json?.data?.result || `Request failed (${statusCode})`);
     err.statusCode = statusCode;
@@ -35,3 +37,5 @@ module.exports = {
   put: (path, req, body) => request("PUT", path, req, body),
   delete: (path, req) => request("DELETE", path, req),
 };
+
+// https://nodejsdesignpatterns.com/blog/nodejs-http-request
