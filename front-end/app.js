@@ -23,14 +23,17 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || "dev-secret-change-me",
+    secret: process.env.SESSION_SECRET || "secret",
     resave: false,
     saveUninitialized: false,
+    cookie: { httpOnly: true, maxAge: 2 * 60 * 60 * 1000, sameSite: "lax" },
   }),
 );
 
 app.use((req, res, next) => {
   res.locals.user = req.session?.user || null;
+  res.locals.flash = req.session?.flash || null;
+  delete req.session.flash;
   next();
 });
 
@@ -40,18 +43,24 @@ app.use(requireAdmin); //protect routes below
 app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function(err, req, res, next) {
+  if (err.statusCode === 401) {
+    delete req.session.token;
+    delete req.session.user;
+    req.session.flash = { type: "danger", message: "Please log in" };
+    return res.redirect("/auth/login");
+  }
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
+  res.status(err.statusCode || err.status || 500);
   res.render("error");
 });
 
