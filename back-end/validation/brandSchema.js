@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const createBrandSchema = Joi.object({
-  name: Joi.string().trim().min(1).max(255).required(),
+  name: Joi.string().trim().min(1).max(100).required(),
 });
 const updateBrandSchema = createBrandSchema;
 
