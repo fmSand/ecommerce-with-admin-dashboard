@@ -52,7 +52,7 @@ app.use(function(err, req, res, next) {
   if (err.statusCode === 401) {
     delete req.session.token;
     delete req.session.user;
-    req.session.flash = { type: "danger", message: "Please log in" };
+    req.session.flash = { type: "danger", message: "Session expired, please login again" };
     return res.redirect("/auth/login");
   }
   // set locals, only providing error in development
