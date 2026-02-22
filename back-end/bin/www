@@ -5,6 +5,7 @@
  */
 
 var app = require('../app');
+var db = require("../models");
 var debug = require('debug')('base-express:server');
 var http = require('http');
 
@@ -15,19 +16,31 @@ var http = require('http');
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-/**
- * Create HTTP server.
- */
+var server;
 
-var server = http.createServer(app);
+start();
 
 /**
- * Listen on provided port, on all network interfaces.
+ * Create and start server after DB is ready.
  */
+async function start() {
+  try {
+    await db.sequelize.authenticate();
+    await db.sequelize.sync({ force: false });
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+    //Create HTTP server.
+    server = http.createServer(app);
+    //Listen on provided port, on all network interfaces.
+    server.listen(port);
+    server.on('error', onError);
+    server.on('listening', onListening);
+
+    console.log("Database synced");
+  } catch (err) {
+    console.error("Startup failed (DB):", err);
+    process.exit(1);
+  }
+}
 
 /**
  * Normalize a port into a number, string, or false.

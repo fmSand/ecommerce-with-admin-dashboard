@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const logger = require("morgan");
-const db = require("./models");
 const { AppError } = require("./utils/AppError");
 const { errorHandler } = require("./middleware");
 
@@ -18,17 +17,6 @@ const orderStatusesRouter = require("./routes/orderStatuses");
 const membershipsRouter = require("./routes/memberships");
 const rolesRouter = require("./routes/roles");
 const searchRouter = require("./routes/search");
-
-// DB SYNC
-db.sequelize
-  .sync({ force: false })
-  .then(() => {
-    console.log("Database synced");
-  })
-  .catch((err) => {
-    console.error("Database sync failed:", err);
-    process.exit(1);
-  });
 
 const app = express();
 
