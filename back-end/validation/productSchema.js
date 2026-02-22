@@ -20,7 +20,7 @@ const updateProductSchema = Joi.object({
   dateAdded: Joi.date().iso(),
   brandId: Joi.number().integer().positive(),
   categoryId: Joi.number().integer().positive(),
-  isDeleted: Joi.boolean(),
+  isDeleted: Joi.boolean().valid(false)
 }).min(1);
 
 module.exports = { createProductSchema, updateProductSchema };
