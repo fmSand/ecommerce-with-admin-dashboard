@@ -65,12 +65,16 @@ class UserService {
   }
 
   async updateRole(userId, roleId) {
-    const user = await this.User.findByPk(userId, {
+    const [affectedRows] = await this.User.update({ roleId }, { where: { id: userId } });
+    if (affectedRows === 0) throw new AppError(404, "User not found");
+
+    return this.User.findByPk(userId, {
+      include: [
+        { model: this.Role, as: "role" },
+        { model: this.Membership, as: "membership" },
+      ],
       attributes: { exclude: ["passwordHash"] },
     });
-    if (!user) throw new AppError(404, "User not found");
-    await user.update({ roleId });
-    return user;
   }
 
   async delete(userId, requestingUserId) {
