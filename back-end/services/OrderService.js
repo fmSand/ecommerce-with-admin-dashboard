@@ -56,15 +56,15 @@ class OrderService {
   }
 
   async updateStatus(orderId, orderStatusId) {
-    const order = await this.Order.findByPk(orderId, {
+    const [affectedRows] = await this.Order.update({ orderStatusId }, { where: { id: orderId } });
+    if (affectedRows === 0) throw new AppError(404, "Order not found");
+
+    return this.Order.findByPk(orderId, {
       include: [
         { model: this.User, as: "user", attributes: ["id", "username", "email"] },
         { model: this.OrderStatus, as: "orderStatus" },
       ],
     });
-    if (!order) throw new AppError(404, "Order not found");
-    await order.update({ orderStatusId });
-    return order;
   }
 
   async create(orderData, orderItems, transaction) {
