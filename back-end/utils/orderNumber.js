@@ -1,15 +1,13 @@
 const crypto = require("crypto");
 
-const BASE36_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const BASE62_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
 function generateOrderNumber(length = 8) {
-  let result = "";
-
+  let orderNumber = "";
   for (let i = 0; i < length; i++) {
-    result += BASE36_ALPHABET[crypto.randomInt(0, BASE36_ALPHABET.length)];
+    orderNumber += BASE62_ALPHABET[crypto.randomInt(0, BASE62_ALPHABET.length)];
   }
-
-  return result;
+  return orderNumber;
 }
 
 module.exports = { generateOrderNumber };
