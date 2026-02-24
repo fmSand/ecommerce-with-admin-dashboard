@@ -1,15 +1,24 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+require("dotenv").config();
+const createError = require("http-errors");
+const express = require("express");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const logger = require("morgan");
 const session = require("express-session");
 const { requireAdmin } = require("./middleware/auth");
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
+// ROUTE IMPORTS
+const indexRouter = require("./routes/index");
+const authRouter = require("./routes/auth");
+const dashboardRouter = require("./routes/dashboard");
+const productsRouter = require("./routes/products");
+const brandsRouter = require("./routes/brands");
+const categoriesRouter = require("./routes/categories");
+const ordersRouter = require("./routes/orders");
+const usersRouter = require("./routes/users");
+const membershipsRouter = require("./routes/memberships");
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -38,29 +47,31 @@ app.use((req, res, next) => {
 });
 
 app.use("/", indexRouter);
-//authroute
-app.use(requireAdmin); //protect routes below
+app.use("/auth", authRouter);
+app.use(requireAdmin);
+app.use("/dashboard", dashboardRouter);
+app.use("/products", productsRouter);
+app.use("/brands", brandsRouter);
+app.use("/categories", categoriesRouter);
+app.use("/orders", ordersRouter);
 app.use("/users", usersRouter);
+app.use("/memberships", membershipsRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  if (err.statusCode === 401) {
-    delete req.session.token;
-    delete req.session.user;
-    req.session.flash = { type: "danger", message: "Session expired, please login again" };
-    return res.redirect("/auth/login");
+app.use(function (err, req, res, next) {
+  if (err?.statusCode === 401) {
+    return req.session.destroy(() => res.redirect("/auth/login?reason=expired"));
   }
-  // set locals, only providing error in development
+  const statusCode = err.statusCode || err.status || 500;
+  res.locals.status = statusCode;
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};
-
-  // render the error page
-  res.status(err.statusCode || err.status || 500);
+  res.status(statusCode);
   res.render("error");
 });
 
