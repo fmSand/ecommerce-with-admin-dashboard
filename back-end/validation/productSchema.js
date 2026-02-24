@@ -7,8 +7,16 @@ const createProductSchema = Joi.object({
   quantity: Joi.number().integer().min(0).required(),
   imgUrl: Joi.string().uri().required(),
   dateAdded: Joi.date().iso().optional(),
-  brandId: Joi.number().integer().positive().required(),
-  categoryId: Joi.number().integer().positive().required(),
+  brandId: Joi.number().integer().positive().required().messages({
+    "number.base": "Please select a brand",
+    "number.positive": "Please select a brand",
+    "any.required": "Please select a brand",
+  }),
+  categoryId: Joi.number().integer().positive().required().messages({
+    "number.base": "Please select a category",
+    "number.positive": "Please select a category",
+    "any.required": "Please select a category",
+  }),
 });
 
 const updateProductSchema = Joi.object({
@@ -18,9 +26,15 @@ const updateProductSchema = Joi.object({
   quantity: Joi.number().integer().min(0),
   imgUrl: Joi.string().uri(),
   dateAdded: Joi.date().iso(),
-  brandId: Joi.number().integer().positive(),
-  categoryId: Joi.number().integer().positive(),
-  isDeleted: Joi.boolean().valid(false)
+  brandId: Joi.number().integer().positive().messages({
+    "number.base": "Please select a brand",
+    "number.positive": "Please select a brand",
+  }),
+  categoryId: Joi.number().integer().positive().messages({
+    "number.base": "Please select a category",
+    "number.positive": "Please select a category",
+  }),
+  isDeleted: Joi.boolean().valid(false),
 }).min(1);
 
 module.exports = { createProductSchema, updateProductSchema };
