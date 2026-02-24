@@ -82,7 +82,7 @@ class UserService {
     if (!user) throw new AppError(404, "User not found");
 
     if (userId === requestingUserId) {
-      throw new AppError(400, "Cannot delete your own account");
+      throw new AppError(403, "Cannot delete your own admin account");
     }
 
     const orderCount = await this.Order.count({ where: { userId } });
