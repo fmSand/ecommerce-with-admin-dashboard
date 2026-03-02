@@ -182,7 +182,6 @@ class ProductService {
 
     return products;
   }
-  //add pagination if time
 }
 
 module.exports = ProductService;
