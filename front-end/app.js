@@ -32,6 +32,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
+    name: "admin.sid",
     secret: process.env.SESSION_SECRET || "secret",
     resave: false,
     saveUninitialized: false,
@@ -66,6 +67,9 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   if (err?.statusCode === 401) {
     return req.session.destroy(() => res.redirect("/auth/login?reason=expired"));
+  }
+  if (err?.statusCode === 403) {
+    return req.session.destroy(() => res.redirect("/auth/login?reason=admin_required"));
   }
   const statusCode = err.statusCode || err.status || 500;
   res.locals.status = statusCode;

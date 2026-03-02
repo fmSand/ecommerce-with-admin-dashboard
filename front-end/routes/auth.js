@@ -35,7 +35,6 @@ router.post("/login", async (req, res, next) => {
       if (err) return next(err);
       req.session.token = token;
       req.session.user = { id, email, name, roleId };
-      req.session.flash = { type: "success", message: "Welcome back!" };
       req.session.save((saveErr) => {
         if (saveErr) return next(saveErr);
         return res.redirect("/dashboard");
