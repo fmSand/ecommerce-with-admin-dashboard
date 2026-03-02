@@ -20,16 +20,22 @@ const membershipsRouter = require("./routes/memberships");
 
 const app = express();
 
-// view engine setup
+// VIEW ENGINE SETUP
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+// MIDDLEWARE
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
 
+// STATIC FILES
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/vendor/bootstrap", express.static(path.join(__dirname, "node_modules/bootstrap")));
+app.use("/vendor/bootstrap-icons", express.static(path.join(__dirname, "node_modules/bootstrap-icons")));
+
+// SESSION SETUP
 app.use(
   session({
     name: "admin.sid",
@@ -40,6 +46,7 @@ app.use(
   }),
 );
 
+// GLOBAL VIEW VARIABLES
 app.use((req, res, next) => {
   res.locals.user = req.session?.user || null;
   res.locals.flash = req.session?.flash || null;
@@ -47,6 +54,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// ROUTES
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use(requireAdmin);
@@ -58,6 +66,7 @@ app.use("/orders", ordersRouter);
 app.use("/users", usersRouter);
 app.use("/memberships", membershipsRouter);
 
+// ERROR HANDLING
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
