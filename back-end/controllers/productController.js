@@ -20,6 +20,7 @@ async function getProductById(req, res) {
   });
   return success(res, 200, "Product found", { product });
 }
+
 async function createProduct(req, res) {
   const { name, description, unitPrice, quantity, imgUrl, dateAdded, brandId, categoryId } = req.body;
 
