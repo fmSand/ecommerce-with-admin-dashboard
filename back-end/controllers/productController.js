@@ -30,7 +30,7 @@ async function createProduct(req, res) {
     unitPrice,
     quantity,
     imgUrl,
-    dateAdded: dateAdded || new Date(),
+    dateAdded,
     brandId,
     categoryId,
   });
