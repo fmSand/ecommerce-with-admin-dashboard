@@ -32,7 +32,7 @@ function showAlert(message, type = "success") {
         ? "bi-exclamation-circle-fill"
         : "bi-exclamation-triangle-fill";
 
-  const role = type === "error" || type === "warning" ? "alert" : "status";
+  const role = type === "danger" || type === "warning" ? "alert" : "status";
   container.innerHTML = `
     <div class="alert alert-theme-${type} alert-dismissible mb-3" role="${role}">
       <i class="bi ${icon} me-2" aria-hidden="true"></i>
