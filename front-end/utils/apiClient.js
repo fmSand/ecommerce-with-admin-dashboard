@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.API_URL || "http://localhost:3000";
+const API_BASE_URL = process.env.API_URL || "http://localhost:3001";
 
 async function request(method, path, req, body) {
   const headers = {};
