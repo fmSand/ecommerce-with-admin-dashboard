@@ -100,32 +100,14 @@ class CartService {
   }
 
   async removeItem(userId, productId) {
-    const transaction = await this.sequelize.transaction();
+    const cart = await this.Cart.findOne({ where: { userId } });
+    if (!cart) throw new AppError(404, "Cart not found");
 
-    try {
-      const cart = await this.Cart.findOne({
-        where: { userId },
-        transaction,
-      });
-      if (!cart) throw new AppError(404, "Cart not found");
-
-      const deletedCount = await this.CartItem.destroy({
-        where: { cartId: cart.id, productId },
-        transaction,
-      });
-      if (deletedCount === 0) throw new AppError(404, "Item not in cart");
-
-      const updatedCart = await this.Cart.findByPk(cart.id, {
-        include: this.#cartInclude,
-        transaction,
-      });
-
-      await transaction.commit();
-      return updatedCart;
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
-    }
+    const deletedCount = await this.CartItem.destroy({
+      where: { cartId: cart.id, productId },
+    });
+    if (deletedCount === 0) throw new AppError(404, "Item not in cart");
+    return this.Cart.findByPk(cart.id, { include: this.#cartInclude });
   }
 
   async clearCart(cartId, transaction) {
