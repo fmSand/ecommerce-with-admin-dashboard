@@ -59,7 +59,11 @@ router.post("/:id/edit", async (req, res) => {
           formError: mapFormError(err.data?.details),
         });
       } catch {
-        //Re-fetch fail(fall through)
+        if (!err.statusCode) console.error(err);
+        res.status(err.statusCode || 500).json({
+          status: "error",
+          data: { result: err.message },
+        });
       }
     }
     req.session.flash = { type: "danger", message: err.message };
