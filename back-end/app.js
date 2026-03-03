@@ -4,6 +4,9 @@ const logger = require("morgan");
 const { AppError } = require("./utils/AppError");
 const { errorHandler } = require("./middleware");
 
+const swaggerUi = require("swagger-ui-express");
+const { swaggerSpec } = require("./swagger");
+
 // ROUTE IMPORTS
 const initRouter = require("./routes/init");
 const authRouter = require("./routes/auth");
@@ -20,7 +23,6 @@ const searchRouter = require("./routes/search");
 
 const app = express();
 
-app.use(helmet());  
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,6 +40,8 @@ app.use("/order-statuses", orderStatusesRouter);
 app.use("/memberships", membershipsRouter);
 app.use("/roles", rolesRouter);
 app.use("/search", searchRouter);
+
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // ERROR HANDLING
 app.use((req, res, next) => {
