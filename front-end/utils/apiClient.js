@@ -5,15 +5,26 @@ async function request(method, path, req, body) {
   if (body) headers["Content-Type"] = "application/json";
   if (req.session?.token) headers.Authorization = `Bearer ${req.session.token}`;
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+      signal: AbortSignal.timeout(10000),
+    });
+  } catch (err) {
+    if (err.name === "TimeoutError") {
+      const e = new Error(`Request timed out: ${method} ${path}`);
+      e.statusCode = 504;
+      throw e;
+    }
+    throw err;
+  }
 
   const contentType = response.headers.get("content-type");
   if (!contentType?.includes("application/json")) {
-    const err = new Error(`Unexpected response (${response.status})`);
+    const err = new Error(`Non-JSON response: ${response.status} ${response.statusText}`);
     err.statusCode = response.status;
     throw err;
   }
@@ -37,5 +48,3 @@ module.exports = {
   put: (path, req, body) => request("PUT", path, req, body),
   delete: (path, req) => request("DELETE", path, req),
 };
-
-// https://nodejsdesignpatterns.com/blog/nodejs-http-request
