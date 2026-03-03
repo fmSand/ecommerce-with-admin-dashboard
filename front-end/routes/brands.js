@@ -43,7 +43,7 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     await api.delete(`/brands/${req.params.id}`, req);
-    res.json({ status: "success", data });
+    res.json({ status: "success", data: { result: "Brand deleted successfully" } });
   } catch (err) {
     res.status(err.statusCode || 500).json({
       status: "error",
