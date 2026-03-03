@@ -1,3 +1,10 @@
+/**
+ * Shared client-side helpers:
+ * Fetch calls here hits the frontend Express routes.
+ * The frontend route handlers read the token from the server-side session and
+ * attach it as a Bearer header when calling the backend via apiClient (utils/apiClient.js).
+ */
+
 async function apiPost(url, body) {
   const res = await fetch(url, {
     method: "POST",
