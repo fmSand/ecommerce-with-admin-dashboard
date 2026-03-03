@@ -21,7 +21,7 @@ class OrderStatusService {
   }
 
   async getAll() {
-    return this.OrderStatus.findAll();
+    return this.OrderStatus.findAll({ order: [["id", "ASC"]] });
   }
 }
 
