@@ -41,7 +41,11 @@ router.post("/login", async (req, res, next) => {
       });
     });
   } catch (err) {
-    return res.render("login", { message: err.message || "Login failed" });
+    const message =
+      err.statusCode === 401
+        ? "Incorrect username/email or password. Please try again."
+        : err.message || "Login failed";
+    return res.render("login", { message });
   }
 });
 
