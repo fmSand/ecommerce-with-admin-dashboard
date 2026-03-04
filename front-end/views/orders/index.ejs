@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title: 'Orders' }) %>
+<body>
+<div class="shell d-flex vh-100 overflow-hidden">
+  <%- include('../partials/sidebar', { active: 'orders' }) %>
+  <main class="main d-flex flex-column overflow-hidden flex-grow-1">
+    <%- include('../partials/topbar', { pageTitle: 'Orders', breadcrumbParent: 'Commerce' }) %>
+    <div class="content flex-grow-1 overflow-y-auto">
+      <%- include('../partials/flash') %>
+      <%
+        const inProgress = orders.filter(o => o.orderStatus?.name === 'In Progress').length;
+        const ordered = orders.filter(o => o.orderStatus?.name === 'Ordered').length;
+        const completed = orders.filter(o => o.orderStatus?.name === 'Completed').length;
+      %>
+      <header class="mb-4">
+        <h1 class="page-title h4 mb-0 fw-bold">Orders</h1>
+      </header>
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <div class="card h-100">
+            <div class="card-body position-relative py-3 px-3">
+              <p class="stat-label text-uppercase mb-1 fw-medium">Total Orders</p>
+              <span class="stat-val fw-bold fs-3"><%= orders.length %></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100">
+            <div class="card-body position-relative py-3 px-3">
+              <p class="stat-label text-uppercase mb-1 fw-medium">In Progress</p>
+              <span class="stat-val warning fw-bold fs-3"><%= inProgress %></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100">
+            <div class="card-body position-relative py-3 px-3">
+              <p class="stat-label text-uppercase mb-1 fw-medium">Ordered</p>
+              <span class="stat-val ordered fw-bold fs-3"><%= ordered %></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="card h-100">
+            <div class="card-body position-relative py-3 px-3">
+              <p class="stat-label text-uppercase mb-1 fw-medium">Completed</p>
+              <span class="stat-val success fw-bold fs-3"><%= completed %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="table-toolbar d-flex align-items-center justify-content-between">
+          <span class="table-toolbar-title">All Orders</span>
+          <span class="table-toolbar-meta"><%= orders.length %> record<%= orders.length !== 1 ? 's' : '' %></span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 40px;">ID</th>
+                <th scope="col">Order #</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Membership</th>
+                <th scope="col">Discount</th>
+                <th scope="col" class="text-end">Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">Date</th>
+                <th scope="col" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (orders.length === 0) { %>
+                <tr>
+                  <td colspan="8" class="text-center py-4" style="color: var(--text-3);">
+                    No orders yet.
+                  </td>
+                </tr>
+              <% } %>
+              <% orders.forEach(o => { %>
+                <%
+                  const statusName = o.orderStatus?.name || 'Unknown';
+                  let statusClass = 'badge-stock badge-deleted';
+                  if (statusName === 'In Progress') statusClass = 'badge-stock badge-low';
+                  if (statusName === 'Ordered') statusClass = 'badge-stock badge-ordered';
+                  if (statusName === 'Completed') statusClass = 'badge-stock badge-active';
+                %>
+                <tr>
+                  <td class="text-muted"><%= o.id %></td>
+                  <td>
+                    <span class="font-monospace fw-semibold" style="color: var(--text);">
+                      #<%= o.orderNumber %>
+                    </span>
+                  </td>
+                  <td>
+                    <div class="fw-medium" style="color: var(--text);">
+                      <%= o.user?.username || '—' %>
+                    </div>
+                    <div style="font-size: 0.7rem; color: var(--text-3);">
+                      <%= o.user?.email || '' %>
+                    </div>
+                  </td>
+                  <td style="color: var(--text-2);">
+                    <%= o.membershipNameAtPurchase || '—' %>
+                  </td>
+                  <td style="color: var(--text-2);">
+                    <% if (o.discountPercentAtPurchase > 0) { %>
+                      <span class="fw-medium" style="color: var(--success);">
+                        <%= o.discountPercentAtPurchase %>% off
+                      </span>
+                    <% } else { %>
+                      None
+                    <% } %>
+                  </td>
+                  <td class="text-end font-monospace fw-medium" style="color: var(--text);">
+                    $<%= Number(o.totalAmount).toFixed(2) %>
+                  </td>
+                  <td>
+                    <span class="<%= statusClass %>">
+                      <% if (statusName !== 'Unknown') { %>
+                        <span class="badge-dot"></span>
+                      <% } %>
+                      <%= statusName %>
+                    </span>
+                  </td>
+                  <td style="font-size: 0.78rem; color: var(--text-3);">
+                    <%= o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-GB') : '—' %>
+                  </td>
+                  <td class="text-end">
+                    <a href="/orders/<%= o.id %>" class="btn-action">
+                      <i class="bi bi-eye me-1" aria-hidden="true"></i>View
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>

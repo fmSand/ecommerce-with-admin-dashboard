@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title: `Order #${order.orderNumber}` }) %>
+<body>
+<div class="shell d-flex vh-100 overflow-hidden">
+  <%- include('../partials/sidebar', { active: 'orders' }) %>
+  <main class="main d-flex flex-column overflow-hidden flex-grow-1">
+    <%- include('../partials/topbar', {
+      pageTitle: `#${order.orderNumber}`,
+      breadcrumbParent: 'Orders'
+    }) %>
+    <div class="content flex-grow-1 overflow-y-auto">
+      <%- include('../partials/flash') %>
+      <a href="/orders" class="btn btn-outline-secondary btn-sm mb-4">
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Back to Orders
+      </a>
+      <%
+        const statusName = order.orderStatus?.name || 'Unknown';
+        let statusClass  = 'badge-stock badge-deleted';
+        if (statusName === 'In Progress') statusClass = 'badge-stock badge-low';
+        if (statusName === 'Ordered')     statusClass = 'badge-stock badge-ordered';
+        if (statusName === 'Completed')   statusClass = 'badge-stock badge-active';
+
+        const subtotal = (order.items || []).reduce((sum, item) => sum + (Number(item.unitPriceAtPurchase) * item.quantity), 0);
+        const discount = order.discountPercentAtPurchase || 0;
+        const total = Number(order.totalAmount);
+        const discountAmt = subtotal - total;
+      %>
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="panel">
+            <div class="table-toolbar d-flex align-items-center justify-content-between">
+              <span class="table-toolbar-title">
+                Order Items
+                <span class="table-toolbar-meta ms-2">
+                  <%= (order.items || []).length %> item<%= (order.items || []).length !== 1 ? 's' : '' %>
+                </span>
+              </span>
+              <span class="<%= statusClass %>">
+                <span class="badge-dot"></span><%= statusName %>
+              </span>
+            </div>
+            <div class="table-responsive">
+              <table class="table mb-0">
+                <thead>
+                  <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col" class="text-end">Unit Price</th>
+                    <th scope="col" class="text-end">Qty</th>
+                    <th scope="col" class="text-end">Line Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% if (!order.items || order.items.length === 0) { %>
+                    <tr>
+                      <td colspan="4" class="text-center py-4" style="color: var(--text-3);">
+                        No items on this order.
+                      </td>
+                    </tr>
+                  <% } %>
+                  <% (order.items || []).forEach(item => { %>
+                    <tr>
+                      <td style="color: var(--text);">
+                        <%= item.productNameAtPurchase %>
+                        <div style="font-size: 0.7rem; color: var(--text-3);">
+                          Product ID: <%= item.productId %>
+                        </div>
+                      </td>
+                      <td class="text-end font-monospace">
+                        $<%= Number(item.unitPriceAtPurchase).toFixed(2) %>
+                      </td>
+                      <td class="text-end">
+                        <%= item.quantity %>
+                      </td>
+                      <td class="text-end font-monospace fw-medium">
+                        $<%= (item.unitPriceAtPurchase * item.quantity).toFixed(2) %>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+                <tfoot style="border-top: 2px solid var(--border);">
+                  <tr>
+                    <td colspan="3" class="text-end" style="font-size: 0.78rem; color: var(--text-3); padding-top: 0.8rem;">
+                      Subtotal
+                    </td>
+                    <td class="text-end font-monospace" style="padding-top: 0.8rem; font-size: 0.82rem;">
+                      $<%= subtotal.toFixed(2) %>
+                    </td>
+                  </tr>
+                  <% if (discount > 0) { %>
+                    <tr>
+                      <td colspan="3" class="text-end" style="font-size: 0.78rem; color: var(--success);">
+                        <%= order.membershipNameAtPurchase %> discount (<%= discount %>%)
+                      </td>
+                      <td class="text-end" style="font-size: 0.82rem; color: var(--success);">
+                        −$<%= discountAmt.toFixed(2) %>
+                      </td>
+                    </tr>
+                  <% } %>
+                  <tr>
+                    <td colspan="3" class="text-end fw-semibold" style="font-size: 0.88rem; padding-top: 0.5rem;">
+                      Total
+                    </td>
+                    <td class="text-end fw-bold" style="font-size: 0.95rem; color: var(--text); padding-top: 0.5rem;">
+                      $<%= total.toFixed(2) %>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="panel mb-4">
+            <div class="table-toolbar d-flex align-items-center justify-content-between">
+              <span class="table-toolbar-title">Order Details</span>
+            </div>
+            <div class="p-3">
+              <dl class="mb-0" style="font-size: 0.78rem;">
+                <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--border);">
+                  <dt class="fw-medium" style="color: var(--text-3);">Order Number</dt>
+                  <dd class="mb-0 fw-semibold font-monospace" style="color: var(--text);">
+                    #<%= order.orderNumber %>
+                  </dd>
+                </div>
+                <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--border);">
+                  <dt class="fw-medium" style="color: var(--text-3);">Customer</dt>
+                  <dd class="mb-0" style="color: var(--text);">
+                    <% if (order.user) { %>
+                      <a href="/users/<%= order.user.id %>" style="color: var(--amber); text-decoration: none;">
+                        <%= order.user.username %>
+                      </a>
+                    <% } else { %>
+                      —
+                    <% } %>
+                  </dd>
+                </div>
+                <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--border);">
+                  <dt class="fw-medium" style="color: var(--text-3);">Status</dt>
+                  <dd class="mb-0">
+                    <span class="<%= statusClass %>">
+                      <span class="badge-dot"></span><%= statusName %>
+                    </span>
+                  </dd>
+                </div>
+                <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--border);">
+                  <dt class="fw-medium" style="color: var(--text-3);">Membership at purchase</dt>
+                  <dd class="mb-0" style="color: var(--text);"><%= order.membershipNameAtPurchase || '—' %></dd>
+                </div>
+                <div class="d-flex justify-content-between py-2" style="border-bottom: 1px solid var(--border);">
+                  <dt class="fw-medium" style="color: var(--text-3);">Discount applied</dt>
+                  <dd class="mb-0" style="color: var(--text);">
+                    <% if (discount > 0) { %>
+                      <span style="color: var(--success); font-weight: 500;"><%= discount %>%</span>
+                    <% } else { %>
+                      None
+                    <% } %>
+                  </dd>
+                </div>
+                <div class="d-flex justify-content-between py-2">
+                  <dt class="fw-medium" style="color: var(--text-3);">Placed on</dt>
+                  <dd class="mb-0" style="color: var(--text);">
+                    <%= order.createdAt ? new Date(order.createdAt).toLocaleDateString('en-GB') : '—' %>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="table-toolbar d-flex align-items-center justify-content-between">
+              <span class="table-toolbar-title">Update Status</span>
+            </div>
+            <div class="p-3">
+              <form method="POST" action="/orders/<%= order.id %>/status">
+                <div class="mb-3">
+                  <label for="orderStatusId" class="form-label" style="font-size: 0.78rem;">Status</label>
+                  <select id="orderStatusId" name="orderStatusId" class="form-select form-select-sm">
+                    <% statuses.forEach(s => { %>
+                      <option
+                        value="<%= s.id %>"
+                        <%= s.id === order.orderStatusId ? 'selected' : '' %>
+                      ><%= s.name %></option>
+                    <% }) %>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm w-100">
+                  Save Status
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>
