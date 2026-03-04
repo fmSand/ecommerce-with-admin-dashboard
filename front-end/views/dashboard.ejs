@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/head', { title: 'Dashboard' }) %>
+<body>
+<div class="d-flex vh-100 overflow-hidden">
+  <%- include('partials/sidebar', { active: 'dashboard' }) %>
+  <main class="main d-flex flex-column overflow-hidden flex-grow-1">
+    <%- include('partials/topbar', { pageTitle: 'Dashboard' }) %>
+    <div class="content flex-grow-1 overflow-y-auto">
+      <%- include('partials/flash') %>
+      <header class="mb-4">
+        <h1 class="page-title h4 fw-bold">
+          Welcome back<% if (user?.name) { %>, <%= user.name.split(" ")[0] %><% } %>
+        </h1>
+      </header>
+      <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+          <a href="/products" class="text-decoration-none">
+            <div class="card h-100 stat-card-link">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Products</p>
+                <span class="stat-val amber fw-bold fs-3"><%= stats.products %></span>
+                <small class="stat-note d-block mt-1">in catalogue</small>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-6 col-md-3">
+          <a href="/orders" class="text-decoration-none">
+            <div class="card h-100 stat-card-link">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Orders</p>
+                <span class="stat-val fw-bold fs-3"><%= stats.orders %></span>
+                <small class="stat-note d-block mt-1">total placed</small>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-6 col-md-3">
+          <a href="/users" class="text-decoration-none">
+            <div class="card h-100 stat-card-link">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Users</p>
+                <span class="stat-val fw-bold fs-3"><%= stats.users %></span>
+                <small class="stat-note d-block mt-1">registered</small>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-6 col-md-3">
+          <a href="/categories" class="text-decoration-none">
+            <div class="card h-100 stat-card-link">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Categories</p>
+                <span class="stat-val fw-bold fs-3"><%= stats.categories %></span>
+                <small class="stat-note d-block mt-1">product groups</small>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <h2 class="section-eyebrow h6 mb-3 fw-semibold text-muted small">QUICK ACCESS</h2>
+      <div class="row g-3">
+        <div class="col-sm-6 col-lg-4">
+          <div class="card h-100 quick-nav-card position-relative overflow-hidden">
+            <div class="quick-card-icon position-absolute m-0">
+              <i class="bi bi-box-seam" aria-hidden="true"></i>
+            </div>
+            <div class="card-body position-relative p-4 d-flex flex-column">
+              <h6 class="card-title quick-card-title">Products</h6>
+              <p class="card-text quick-card-sub lh-base mb-0">Add, edit, delete and search your product catalogue.</p>
+              <div class="d-flex gap-2 mt-auto pt-2">
+                <a href="/products" class="btn btn-primary btn-sm" aria-label="View all products">View All</a>
+                <a href="/products/new" class="btn btn-outline-secondary btn-sm" aria-label="Add new product">Add New</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="card h-100 quick-nav-card position-relative overflow-hidden">
+            <div class="quick-card-icon position-absolute m-0">
+              <i class="bi bi-receipt" aria-hidden="true"></i>
+            </div>
+            <div class="card-body position-relative p-4 d-flex flex-column">
+              <h6 class="card-title quick-card-title">Orders</h6>
+              <p class="card-text quick-card-sub lh-base mb-0">View and manage customer orders. Update order status from In Progress through to Completed.</p>
+              <div class="mt-auto pt-2">
+                <a href="/orders" class="btn btn-primary btn-sm" aria-label="View all orders">View All</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="card h-100 quick-nav-card position-relative overflow-hidden">
+            <div class="quick-card-icon position-absolute m-0">
+              <i class="bi bi-people" aria-hidden="true"></i>
+            </div>
+            <div class="card-body position-relative p-4 d-flex flex-column">
+              <h6 class="card-title quick-card-title">Users</h6>
+              <p class="card-text quick-card-sub lh-base mb-0">Manage registered users. Edit profiles and promote users to the Admin role.</p>
+              <div class="mt-auto pt-2">
+                <a href="/users" class="btn btn-primary btn-sm" aria-label="View all users">View All</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="card h-100 quick-nav-card position-relative overflow-hidden">
+            <div class="quick-card-icon position-absolute m-0">
+              <i class="bi bi-tags" aria-hidden="true"></i>
+            </div>
+            <div class="card-body position-relative p-4 d-flex flex-column">
+              <h6 class="card-title quick-card-title">Categories &amp; Brands</h6>
+              <p class="card-text quick-card-sub lh-base mb-0">Manage product groupings. Add or rename categories and brands used across the catalogue.</p>
+              <div class="d-flex gap-2 mt-auto pt-2">
+                <a href="/categories" class="btn btn-primary btn-sm" aria-label="View all categories">Categories</a>
+                <a href="/brands" class="btn btn-primary btn-sm" aria-label="View all brands">Brands</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-lg-4">
+          <div class="card h-100 quick-nav-card position-relative overflow-hidden">
+            <div class="quick-card-icon position-absolute m-0">
+              <i class="bi bi-award" aria-hidden="true"></i>
+            </div>
+            <div class="card-body position-relative p-4 d-flex flex-column">
+              <h6 class="card-title quick-card-title">Memberships</h6>
+              <p class="card-text quick-card-sub lh-base mb-0">Configure Bronze, Silver and Gold discount tiers applied automatically at checkout.</p>
+              <div class="mt-auto pt-2">
+                <a href="/memberships" class="btn btn-primary btn-sm" aria-label="Manage memberships">Manage</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('partials/scripts') %>
+</body>
+</html>
