@@ -1,0 +1,150 @@
+<% if (typeof formError !== 'undefined' && formError) { %>
+  <div class="alert alert-theme-danger mb-4" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+    <%= formError %>
+  </div>
+<% } %>
+
+<form method="POST" action="<%= action %>" novalidate>
+  <div class="row g-3 mb-3">
+    <div class="col-md-8">
+      <label for="name" class="form-label">Product Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        class="form-control <%= fieldErrors.name ? 'is-invalid' : '' %>"
+        value="<%= formData?.name ?? product?.name ?? '' %>"
+        maxlength="255"
+        required
+      >
+      <% if (fieldErrors.name) { %>
+        <div class="invalid-feedback"><%= fieldErrors.name %></div>
+      <% } %>
+    </div>
+    <div class="col-md-4">
+      <label for="unitPrice" class="form-label">Price</label>
+      <div class="input-group">
+        <span class="input-group-text">$</span>
+        <input
+          type="number"
+          id="unitPrice"
+          name="unitPrice"
+          class="font-monospace form-control <%= fieldErrors.unitPrice ? 'is-invalid' : '' %>"
+          value="<%= formData?.unitPrice ?? product?.unitPrice ?? '' %>"
+          step="0.01"
+          min="0.01"
+          required
+        >
+        <% if (fieldErrors.unitPrice) { %>
+          <div class="invalid-feedback"><%= fieldErrors.unitPrice %></div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea
+      id="description"
+      name="description"
+      rows="3"
+      class="form-control <%= fieldErrors.description ? 'is-invalid' : '' %>"
+      maxlength="2000"
+      required
+    ><%= formData?.description ?? product?.description ?? '' %></textarea>
+    <% if (fieldErrors.description) { %>
+      <div class="invalid-feedback"><%= fieldErrors.description %></div>
+    <% } %>
+  </div>
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <label for="brandId" class="form-label">Brand</label>
+      <select
+        id="brandId"
+        name="brandId"
+        class="form-select <%= fieldErrors.brandId ? 'is-invalid' : '' %>"
+        required
+      >
+        <option value="">Select brand</option>
+        <% brands.forEach(b => { %>
+          <%
+            const selectedBrand = formData?.brandId ?? product?.brandId;
+          %>
+          <option
+            value="<%= b.id %>"
+            <%= String(selectedBrand) === String(b.id) ? 'selected' : '' %>
+          ><%= b.name %></option>
+        <% }) %>
+      </select>
+      <% if (fieldErrors.brandId) { %>
+        <div class="invalid-feedback"><%= fieldErrors.brandId %></div>
+      <% } %>
+    </div>
+    <div class="col-md-6">
+      <label for="categoryId" class="form-label">Category</label>
+      <select
+        id="categoryId"
+        name="categoryId"
+        class="form-select <%= fieldErrors.categoryId ? 'is-invalid' : '' %>"
+        required
+      >
+        <option value="">Select category</option>
+        <% categories.forEach(c => { %>
+          <%
+            const selectedCategory = formData?.categoryId ?? product?.categoryId;
+          %>
+          <option
+            value="<%= c.id %>"
+            <%= String(selectedCategory) === String(c.id) ? 'selected' : '' %>
+          ><%= c.name %></option>
+        <% }) %>
+      </select>
+      <% if (fieldErrors.categoryId) { %>
+        <div class="invalid-feedback"><%= fieldErrors.categoryId %></div>
+      <% } %>
+    </div>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label for="quantity" class="form-label">Quantity</label>
+      <input
+        type="number"
+        id="quantity"
+        name="quantity"
+        class="form-control <%= fieldErrors.quantity ? 'is-invalid' : '' %>"
+        value="<%= formData?.quantity ?? product?.quantity ?? '' %>"
+        min="0"
+        required
+      >
+      <% if (fieldErrors.quantity) { %>
+        <div class="invalid-feedback"><%= fieldErrors.quantity %></div>
+      <% } %>
+    </div>
+    <div class="col-md-8">
+      <label for="imgUrl" class="form-label">Image URL</label>
+      <input
+        type="url"
+        id="imgUrl"
+        name="imgUrl"
+        class="form-control <%= fieldErrors.imgUrl ? 'is-invalid' : '' %>"
+        value="<%= formData?.imgUrl ?? product?.imgUrl ?? '' %>"
+        placeholder="https://..."
+        required
+      >
+      <% if (fieldErrors.imgUrl) { %>
+        <div class="invalid-feedback"><%= fieldErrors.imgUrl %></div>
+      <% } %>
+    </div>
+  </div>
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary">
+      <i class="bi bi-check-lg me-1" aria-hidden="true"></i>
+      <%= submitLabel %>
+    </button>
+    <% if (product) { %>
+      <button type="reset" class="btn btn-outline-secondary">Discard changes</button>
+    <% } else { %>
+      <a href="/products" class="btn btn-outline-secondary">Cancel</a>
+    <% } %>
+  </div>
+</form>

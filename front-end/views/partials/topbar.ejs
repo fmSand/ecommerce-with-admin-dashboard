@@ -1,0 +1,17 @@
+<header class="topbar d-flex align-items-center flex-shrink-0 gap-3">
+  <nav aria-label="breadcrumb">
+    <ol class="list-unstyled d-flex align-items-center gap-2 mb-0">
+      <li><a class="breadcrumb-root" href="/dashboard">EP Admin</a></li>
+      <% if (typeof breadcrumbParent !== 'undefined' && breadcrumbParent) { %>
+        <li><span class="breadcrumb-sep" aria-hidden="true">&gt</span></li>
+        <li><span class="breadcrumb-root" ><%= breadcrumbParent %></span></li>
+      <% } %>
+      <li><span class="breadcrumb-sep" aria-hidden="true">&gt</span></li>
+      <li aria-current="page">
+        <span class="<%= active === 'error' ? 'breadcrumb-error' : 'breadcrumb-current' %>">
+          <%= typeof pageTitle !== 'undefined' ? pageTitle : 'Page' %>
+        </span>
+      </li>
+    </ol>
+  </nav>
+</header>
