@@ -23,7 +23,9 @@ function errorHandler(err, req, res, next) {
 
   if (err instanceof UniqueConstraintError) {
     const fieldNames = Object.keys(err.fields || {});
-
+    /*NOTE: These field messages match the assignment's error response example.
+    If this was for production I would avoid revealing whether an email/username exists and and use a generic message
+    instead*/
     const fieldMessages = {
       email: "Email already exists",
       username: "Username already exists",
