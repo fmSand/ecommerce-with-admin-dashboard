@@ -1,10 +1,10 @@
+process.env.JWT_SECRET = "test-jwt-secret";
 const request = require("supertest");
 const { Op } = require("sequelize");
 const app = require("../app");
 const db = require("../models");
 const { generateToken } = require("../utils/jwt");
 const { ADMIN_ROLE_ID, USER_ROLE_ID } = require("../constants/roles");
-process.env.JWT_SECRET = process.env.JWT_SECRET || "secret";
 
 //HELPERS
 function expectEnvelope(res) {
@@ -42,7 +42,6 @@ afterAll(async () => {
   }
 });
 
-//SEQUENTIAL FLOW:
 describe("Required CRUD tests", () => {
   test("Spec CRUD flow — steps 1 through 8", async () => {
     //1. Add a category with the name TEST_CATEGORY
