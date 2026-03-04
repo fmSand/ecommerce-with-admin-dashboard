@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title: 'Products' }) %>
+<body>
+<div class="shell d-flex vh-100 overflow-hidden">
+  <%- include('../partials/sidebar', { active: 'products' }) %>
+  <main class="main d-flex flex-column overflow-hidden flex-grow-1">
+    <%- include('../partials/topbar', { pageTitle: 'Products', breadcrumbParent: 'Catalogue' }) %>
+    <div class="content flex-grow-1 overflow-y-auto">
+      <%- include('../partials/flash') %>
+      <%
+        const deletedCount = products.filter(p => p.isDeleted).length;
+        const activeCount = products.length - deletedCount;
+        const lowStock = products.filter(p => !p.isDeleted && p.quantity > 0 && p.quantity <= 5).length;
+        const outOfStock = products.filter(p => !p.isDeleted && p.quantity === 0).length;
+      %>
+      <header class="d-flex align-items-start justify-content-between mb-4">
+        <div>
+          <h1 class="page-title h4 mb-1 fw-bold">Products</h1>
+          <% if (searched) { %>
+            <p class="page-sub mb-0"><%= products.length %> result<%= products.length !== 1 ? 's' : '' %> found</p>
+          <% } %>
+        </div>
+        <a href="/products/new" class="btn btn-primary">
+          <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>
+          Add Product
+        </a>
+      </header>
+      <% if (!searched) { %>
+        <div class="row g-3 mb-4">
+          <div class="col-6 col-md-3">
+            <div class="card h-100">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Total Products</p>
+                <span class="stat-val fw-bold fs-3"><%= products.length %></span>
+                <small class="stat-note d-block mt-1">All including deleted</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="card h-100">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Active</p>
+                <span class="stat-val amber fw-bold fs-3"><%= activeCount %></span>
+                <small class="stat-note d-block mt-1">Visible to customers</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="card h-100">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Low Stock</p>
+                <span class="stat-val warning fw-bold fs-3"><%= lowStock %></span>
+                <small class="stat-note d-block mt-1">1-5 units remaining</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="card h-100">
+              <div class="card-body position-relative py-3 px-3">
+                <p class="stat-label text-uppercase mb-1 fw-medium">Out of Stock</p>
+                <span class="stat-val danger fw-bold fs-3"><%= outOfStock %></span>
+                <small class="stat-note d-block mt-1">0 units remaining</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% } %>
+
+      <%# Filter/search %>
+      <div class="filter-bar mb-3">
+        <form method="POST" action="/products/search" role="search">
+          <div class="row g-2 align-items-end">
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-medium" for="search-name">Product name</label>
+              <input
+                type="search"
+                id="search-name"
+                name="name"
+                class="form-control form-control-sm"
+                placeholder="e.g. iPhone, MacBook…"
+                value="<%= searchQuery.name || '' %>"
+              >
+            </div>
+            <div class="col-6 col-md-3">
+              <label class="form-label fw-medium" for="search-brand">Brand</label>
+              <select name="brand" id="search-brand" class="form-select form-select-sm">
+                <option value="">All brands</option>
+                <% brands.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(b => { %>
+                  <option value="<%= b.name %>" <%= searchQuery.brand === b.name ? 'selected' : '' %>>
+                    <%= b.name %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-6 col-md-3">
+              <label class="form-label fw-medium" for="search-category">Category</label>
+              <select name="category" id="search-category" class="form-select form-select-sm">
+                <option value="">All categories</option>
+                <% categories.slice().sort((a, b) => a.name.localeCompare(b.name)).forEach(c => { %>
+                  <option value="<%= c.name %>" <%= searchQuery.category === c.name ? 'selected' : '' %>>
+                    <%= c.name %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="col-12 col-md-2 d-flex gap-2">
+              <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                <i class="bi bi-search me-1" aria-hidden="true"></i>Search
+              </button>
+              <% if (searched) { %>
+                <a href="/products" class="btn btn-outline-secondary btn-sm" title="Clear search">Clear</a>
+              <% } %>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <%# Products table %>
+      <div class="panel">
+        <div class="table-toolbar d-flex align-items-center justify-content-between">
+          <span class="table-toolbar-title">
+            <% if (searched) { %>Search Results<% } else { %>All Products<% } %>
+          </span>
+          <span class="table-toolbar-meta">
+            Showing <%= products.length %> of <%= products.length %>
+          </span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 44px;">ID</th>
+                <th scope="col" style="width: 44px;"></th>
+                <th scope="col" style="width: 25%;">Product</th>
+                <th scope="col" style="width: 25%;">Description</th>
+                <th scope="col" style="width: 90px;">Brand</th>
+                <th scope="col" style="width: 90px;">Category</th>
+                <th scope="col" class="text-end" style="width: 80px;">Price</th>
+                <th scope="col" style="width: 130px;">Stock</th>
+                <th scope="col" style="width: 100px;">Date added</th>
+                <th scope="col" class="text-end" style="width: 70px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (products.length === 0) { %>
+                <tr>
+                  <td colspan="10" class="text-center py-5" style="color: var(--text-3);">
+                    <% if (searched) { %>
+                      <i class="bi bi-search d-block mb-2" style="font-size: 1.4rem;" aria-hidden="true"></i>
+                      No products match your search criteria.
+                      <a href="/products" class="d-block mt-1" style="font-size: 0.78rem;">Clear search</a>
+                    <% } else { %>
+                      No products yet. Run <code>/init</code> to seed data.
+                    <% } %>
+                  </td>
+                </tr>
+              <% } %>
+              <% products.forEach(p => { %>
+                <%
+                  let stockClass = 'badge-stock badge-active';
+                  let stockLabel = `In stock - ${p.quantity}`;
+                  if (p.isDeleted) {
+                    stockClass = 'badge-stock badge-deleted';
+                    stockLabel = '—';
+                  } else if (p.quantity === 0) {
+                    stockClass = 'badge-stock badge-critical';
+                    stockLabel = 'Out of stock';
+                  } else if (p.quantity <= 5) {
+                    stockClass = 'badge-stock badge-low';
+                    stockLabel = `Low - ${p.quantity}`;
+                  }
+                %>
+                <tr class="<%= p.isDeleted ? 'row-deleted' : '' %>">
+                  <td class="text-muted"><%= p.id %></td>
+                  <td>
+                    <% if (p.imgUrl) { %>
+                      <img
+                        src="<%= p.imgUrl %>"
+                        alt=""
+                        class="td-img d-block"
+                        loading="lazy"
+                        onerror="this.style.visibility='hidden'"
+                      >
+                    <% } %>
+                  </td>
+                  <td>
+                    <span class="fw-medium text-nowrap" style="color: var(--text);">
+                      <%= p.name %>
+                    </span>
+                    <% if (p.isDeleted) { %>
+                      <span class="badge-stock badge-deleted ms-2">Deleted</span>
+                    <% } %>
+                  </td>
+                  <td class="text-nowrap overflow-hidden" style="max-width: 220px; text-overflow: ellipsis;">
+                    <%= p.description%>
+                  </td>
+                  <td><%= p.brand %></td>
+                  <td><%= p.category %></td>
+                  <td class="text-end fw-medium font-monospace">
+                    $<%= Number(p.unitPrice).toFixed(2) %>
+                  </td>
+                  <td>
+                    <span class="<%= stockClass %>">
+                      <% if (!p.isDeleted && p.quantity > 0) { %>
+                        <span class="badge-dot"></span>
+                      <% } %>
+                      <%= stockLabel %>
+                    </span>
+                  </td>
+                  <td class="text-nowrap">
+                    <%= p.dateAdded ? p.dateAdded.split('T')[0] : '—' %>
+                  </td>
+                  <td class="text-end">
+                    <div class="d-flex gap-2 justify-content-end">
+                      <% if (p.isDeleted) { %>
+                        <form method="POST" action="/products/<%= p.id %>/restore" class="d-inline">
+                          <button
+                            type="submit"
+                            class="btn-action restore"
+                            data-name="<%= p.name %>"
+                            onclick="return confirm('Restore ' + this.dataset.name + '?')"
+                          >
+                            <i class="bi bi-arrow-counterclockwise me-1" aria-hidden="true"></i>Restore
+                          </button>
+                        </form>
+                      <% } else { %>
+                        <a href="/products/<%= p.id %>/edit" class="btn-action">
+                          <i class="bi bi-pencil me-1" aria-hidden="true"></i>
+                        </a>
+                        <form method="POST" action="/products/<%= p.id %>/delete" class="d-inline">
+                          <button
+                            type="submit"
+                            class="btn-action danger"
+                            data-name="<%= p.name %>"
+                            onclick="return confirm('Delete ' + this.dataset.name + '? It can be restored later.')"
+                          >
+                            <i class="bi bi-trash me-1" aria-hidden="true"></i>
+                          </button>
+                        </form>
+                      <% } %>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>
