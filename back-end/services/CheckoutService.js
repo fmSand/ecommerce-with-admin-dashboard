@@ -35,11 +35,19 @@ class CheckoutService {
       const membership = await this.membershipService.getById(user.membershipId, transaction);
       const inProgressStatus = await this.orderStatusService.getByName("In Progress", transaction);
 
+      const subtotalCents = orderItems.reduce((sum, item) => {
+        const priceCents = Math.round(Number(item.unitPriceAtPurchase) * 100);
+        return sum + priceCents * item.quantity;
+      }, 0);
+      const discountCents = Math.round(subtotalCents * (membership.discountPercent / 100));
+      const totalCents = subtotalCents - discountCents;
+
       const orderData = {
         userId: user.id,
         discountPercentAtPurchase: membership.discountPercent,
         membershipNameAtPurchase: membership.name,
         orderStatusId: inProgressStatus.id,
+        totalAmount: (totalCents / 100).toFixed(2),
       };
       const order = await this.orderService.create(orderData, orderItems, transaction);
 
