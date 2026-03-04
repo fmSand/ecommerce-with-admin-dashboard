@@ -276,12 +276,13 @@ router.delete(
  *       1. Validates stock availability for all items in the cart
  *       2. Snapshots the current product prices and names onto the order items
  *       3. Creates an order with a unique 8-character order number
- *       4. Snapshots the user's current membership name and discount percentage onto the order for historical audit purposes
- *       5. Decrements product stock quantities
- *       6. Updates the user's total purchased quantity
- *       7. Recalculates and updates the user's membership tier if applicable
- *       8. Clears the cart
- *       9. Returns the created order with all details
+ *       4. Computes the order total using integer-cents arithmetic and applies the membership discount
+ *       5. Snapshots the user's current membership name and discount percentage onto the order for historical audit purposes
+ *       6. Decrements product stock quantities
+ *       7. Updates the user's total purchased quantity
+ *       8. Recalculates and updates the user's membership tier if applicable
+ *       9. Clears the cart
+ *       10. Returns the created order with all details
  *
  *       The entire operation is wrapped in a database transaction for data integrity.
  *     tags: [Cart]
