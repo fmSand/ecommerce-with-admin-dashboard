@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title: 'Memberships' }) %>
+<body>
+<div class="shell d-flex vh-100 overflow-hidden">
+  <%- include('../partials/sidebar', { active: 'memberships' }) %>
+  <main class="main d-flex flex-column overflow-hidden flex-grow-1">
+    <%- include('../partials/topbar', { pageTitle: 'Memberships', breadcrumbParent: 'Commerce' }) %>
+    <div class="content flex-grow-1 overflow-y-auto">
+      <%- include('../partials/flash') %>
+      <header class="mb-4">
+        <div>
+          <h1 class="page-title h4 mb-1 fw-bold">Memberships</h1>
+          <p class="page-sub mb-0">Discount tiers applied at checkout based on total items purchased</p>
+        </div>
+      </header>
+      <div id="alert-container" class="mb-3" role="status" aria-live="polite" aria-atomic="true"></div>
+      <div class="panel">
+        <div class="table-toolbar d-flex align-items-center justify-content-between">
+          <span class="table-toolbar-title">Membership Tiers</span>
+          <span class="table-toolbar-meta"><%= memberships.length %> tiers</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th scope="col">Tier</th>
+                <th scope="col">Threshold</th>
+                <th scope="col">Discount</th>
+                <th scope="col" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% memberships.forEach(membership => { %>
+                <%
+                  let tierClass = 'badge-stock badge-bronze';
+                  if (membership.name === 'Gold') {
+                    tierClass = 'badge-stock badge-gold';
+                  } else if (membership.name === 'Silver') {
+                    tierClass = 'badge-stock badge-silver';
+                  }
+                %>
+                <tr data-id="<%= membership.id %>" data-discount="<%= membership.discountPercent %>">
+                  <td>
+                    <span class="<%= tierClass %> px-2 py-1">
+                      <%= membership.name %>
+                    </span>
+                  </td>
+                  <td style="color: var(--text-2); font-size: 0.82rem;">
+                    <% if (membership.threshold === 0) { %>
+                      Default (0 items)
+                    <% } else { %>
+                      ≥ <%= membership.threshold %> items purchased
+                    <% } %>
+                  </td>
+                  <td>
+                    <span class="membership-discount fw-semibold" style="color: var(--text);">
+                      <%= membership.discountPercent %>%
+                    </span>
+                    <div class="membership-edit-form d-none">
+                      <div class="input-group input-group-sm" style="max-width: 140px;">
+                        <input
+                          type="number"
+                          class="form-control"
+                          value="<%= membership.discountPercent %>"
+                          min="0"
+                          max="100"
+                          step="1"
+                          aria-label="Edit discount percent for <%= membership.name %>"
+                        >
+                        <span class="input-group-text">%</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="text-end">
+                    <div class="d-flex gap-2 justify-content-end membership-actions">
+                      <button class="btn-action membership-edit-btn" type="button">
+                        <i class="bi bi-pencil me-1" aria-hidden="true"></i>Edit Discount
+                      </button>
+                    </div>
+                    <div class="membership-edit-actions d-none d-flex gap-2 justify-content-end">
+                      <button class="btn-action restore save-btn" type="button">
+                        <i class="bi bi-check-lg me-1" aria-hidden="true"></i>Save
+                      </button>
+                      <button class="btn-action cancel-btn" type="button">
+                        Cancel
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="mt-3" style="font-size: 0.75rem; color: var(--text-3);">
+        <i class="bi bi-info-circle me-1" aria-hidden="true"></i>
+        Membership tier is recalculated automatically after each checkout based on the user's total items purchased.
+        Only the discount percentage can be edited here.
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/js/crud.js"></script>
+<script src="/js/memberships.js"></script>
+<%- include('../partials/scripts') %>
+</body>
+</html>
