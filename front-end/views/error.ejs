@@ -1,15 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head', { title: 'Error' }) %>
-<body class="bg-light d-flex align-items-center min-vh-100">
-  <div class="container text-center">
-    <h1 class="display-1 text-muted"><%= typeof status !== 'undefined' ? status : '' %></h1>
-    <p class="lead"><%= message %></p>
-    <a href="/dashboard" class="btn btn-primary mt-3">Back to Dashboard</a>
-    <% if (typeof error !== 'undefined' && error && error.stack) { %>
-      <pre class="text-start mt-4 p-3 bg-white rounded small"><%= error.stack %></pre>
-    <% } %>
-  </div>
-  <%- include('partials/scripts') %>
+<body class="d-flex align-items-center justify-content-center min-vh-100">
+      <div class="error-card w-100 overflow-hidden">
+        <div class="error-strip"></div>
+        <div class="p-4 p-lg-5">
+          <div class="error-inner position-relative">
+            <div class="error-status fw-semibold text-uppercase">
+              <i class="bi bi-exclamation-triangle-fill me-2" aria-hidden="true"></i>
+              <%= typeof status !== 'undefined' ? status : 500 %> —
+              <% if (!status || status === 500) { %>
+                Internal Server Error
+              <% } else if (status === 404) { %>
+                Page Not Found
+              <% } else if (status === 403) { %>
+                Forbidden
+              <% } else if (status === 401) { %>
+                Unauthorised
+              <% } else { %>
+                Error
+              <% } %>
+            </div>
+            <div class="error-title fw-bold">Something went wrong.</div>
+            <div class="error-message-box">
+              <%= typeof message !== 'undefined' && message
+                    ? message
+                    : 'An unexpected error occurred. Please try again or contact support.' %>
+            </div>
+            <% if (typeof error !== 'undefined' && error && error.stack) { %>
+              <div class="error-stack-box">
+                <div class="error-stack-label d-flex align-items-center gap-2 fw-semibold text-uppercase mb-2">
+                  Stack trace
+                  <span class="dev-badge">DEV ONLY</span>
+                </div>
+                <pre><%= error.stack %></pre>
+              </div>
+            <% } %>
+              <a href="javascript:history.back()" class="btn btn-primary">
+                <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>
+                Go back
+              </a>
+          </div>
+        </div>
+      </div>
+<%- include('partials/scripts') %>
 </body>
 </html>
