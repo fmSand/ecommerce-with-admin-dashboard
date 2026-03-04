@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../partials/head', { title: 'Users' }) %>
+<body>
+<div class="shell d-flex vh-100 overflow-hidden">
+  <%- include('../partials/sidebar', { active: 'users' }) %>
+  <main class="main d-flex flex-column overflow-hidden flex-grow-1">
+    <%- include('../partials/topbar', { pageTitle: 'Users', breadcrumbParent: 'Commerce' }) %>
+    <div class="content flex-grow-1 overflow-y-auto">
+      <%- include('../partials/flash') %>
+      <header class="mb-4">
+        <div>
+          <h1 class="page-title h4 mb-1 fw-bold">Users</h1>
+          <p class="page-sub mb-0"><%= users.length %> registered user<%= users.length !== 1 ? 's' : '' %></p>
+        </div>
+      </header>
+      <div class="panel">
+        <div class="table-toolbar d-flex align-items-center justify-content-between">
+          <span class="table-toolbar-title">All Users</span>
+          <span class="table-toolbar-meta"><%= users.length %> record<%= users.length !== 1 ? 's' : '' %></span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th scope="col" style="width: 40px;">ID</th>
+                <th scope="col">User</th>
+                <th scope="col">Email</th>
+                <th scope="col">Address</th>
+                <th scope="col">Role</th>
+                <th scope="col">Membership</th>
+                <th scope="col">Purchases</th>
+                <th scope="col" class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (users.length === 0) { %>
+                <tr>
+                  <td colspan="8" class="text-center py-4" style="color: var(--text-3);">
+                    No users found.
+                  </td>
+                </tr>
+              <% } %>
+              <% users.forEach(u => { %>
+                <%
+                  const isAdmin = u.role?.name === 'Admin';
+                  const memberName = u.membership?.name || 'Bronze';
+                  let memberClass = 'badge-stock badge-bronze';
+                  if (memberName === 'Gold')   memberClass = 'badge-stock badge-gold';
+                  if (memberName === 'Silver') memberClass = 'badge-stock badge-silver';
+                %>
+                <tr>
+                  <td class="text-muted"><%= u.id %></td>
+                  <td>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="avatar-initials d-flex align-items-center justify-content-center flex-shrink-0 fw-bold" aria-hidden="true">
+                        <%= (u.firstName?.[0] || '') + (u.lastName?.[0] || '') %>
+                      </div>
+                      <div>
+                        <div class="fw-medium" style="color: var(--text);">
+                          <%= u.firstName %> <%= u.lastName %>
+                        </div>
+                        <div style="color: var(--text-3); font-size: 0.72rem;">@<%= u.username %></div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><%= u.email%></td>
+                  <td><%= u.address || '—' %></td>
+                  <td>
+                    <% if (isAdmin) { %>
+                      <span class="badge-stock badge-active">
+                        <span class="badge-dot"></span>Admin
+                      </span>
+                    <% } else { %>
+                      <span class="badge-stock badge-deleted">User</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <span class="<%= memberClass %>">
+                      <%= memberName %>
+                    </span>
+                  </td>
+                  <td style="color: var(--text-2);">
+                    <%= u.totalPurchasedQuantity || 0 %> items
+                  </td>
+                  <td class="text-end">
+                    <a href="/users/<%= u.id %>" class="btn-action">
+                      <i class="bi bi-pencil me-1" aria-hidden="true"></i>Manage
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<%- include('../partials/scripts') %>
+</body>
+</html>
