@@ -225,13 +225,14 @@
                           </button>
                         </form>
                       <% } else { %>
-                        <a href="/products/<%= p.id %>/edit" class="btn-action">
+                        <a href="/products/<%= p.id %>/edit" class="btn-action" title="Edit">
                           <i class="bi bi-pencil me-1" aria-hidden="true"></i>
                         </a>
                         <form method="POST" action="/products/<%= p.id %>/delete" class="d-inline">
                           <button
                             type="submit"
                             class="btn-action danger"
+                            title="Delete"
                             data-name="<%= p.name %>"
                             onclick="return confirm('Delete ' + this.dataset.name + '? It can be restored later.')"
                           >
