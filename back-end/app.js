@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const logger = require("morgan");
+const helmet = require("helmet");
 const { AppError } = require("./utils/AppError");
 const { errorHandler } = require("./middleware");
 
@@ -23,6 +24,7 @@ const searchRouter = require("./routes/search");
 
 const app = express();
 
+app.use(helmet());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -5,6 +5,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const session = require("express-session");
+const helmet = require("helmet");
 const { requireAdmin } = require("./middleware/auth");
 
 // ROUTE IMPORTS
@@ -25,6 +26,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
 // MIDDLEWARE
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
