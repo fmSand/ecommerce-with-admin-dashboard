@@ -74,7 +74,7 @@
             <tbody>
               <% if (orders.length === 0) { %>
                 <tr>
-                  <td colspan="8" class="text-center py-4" style="color: var(--text-3);">
+                  <td colspan="9" class="text-center py-4" style="color: var(--text-3);">
                     No orders yet.
                   </td>
                 </tr>
@@ -86,6 +86,9 @@
                   if (statusName === 'In Progress') statusClass = 'badge-stock badge-low';
                   if (statusName === 'Ordered') statusClass = 'badge-stock badge-ordered';
                   if (statusName === 'Completed') statusClass = 'badge-stock badge-active';
+                  let tierClass = 'badge-stock badge-bronze';
+                  if (o.membershipNameAtPurchase === 'Gold') tierClass = 'badge-stock badge-gold';
+                  else if (o.membershipNameAtPurchase === 'Silver') tierClass = 'badge-stock badge-silver';
                 %>
                 <tr>
                   <td class="text-muted"><%= o.id %></td>
@@ -102,14 +105,14 @@
                       <%= o.user?.email || '' %>
                     </div>
                   </td>
-                  <td style="color: var(--text-2);">
-                    <%= o.membershipNameAtPurchase || '—' %>
+                  <td>
+                    <span class="<%= tierClass %>">
+                      <%= o.membershipNameAtPurchase || '—' %>
+                    </span>
                   </td>
                   <td style="color: var(--text-2);">
                     <% if (o.discountPercentAtPurchase > 0) { %>
-                      <span class="fw-medium" style="color: var(--success);">
-                        <%= o.discountPercentAtPurchase %>% off
-                      </span>
+                      <span class="fw-medium"><%= o.discountPercentAtPurchase %>% off</span>
                     <% } else { %>
                       None
                     <% } %>
