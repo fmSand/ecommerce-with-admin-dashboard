@@ -44,6 +44,7 @@ class ProductService {
     return products;
   }
 
+  //used raw SQL to match getAll response shape(flat) for consitency and matching assigment example
   async getById(id, { includeDeleted = false } = {}) {
     const conditions = ["p.id = :id"];
     const replacements = { id };
