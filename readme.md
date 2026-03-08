@@ -2,7 +2,7 @@
 
 # Noroff EP E-Commerce
 
-Full-stack e-commerce application built as a Noroff back-end exam project. The system consists of two separate Express applications: a REST API (back-end) and a server-rendered admin panel (front-end). The back-end provides all data access through API endpoints, and the front-end consumes those endpoints exclusively.
+Full-stack e-commerce application built as Noroff back-end exam project. The system consists of two separate Express applications: a REST API (back-end) and a server-rendered admin panel (front-end). The back-end provides all data access through API endpoints, and the front-end consumes those endpoints exclusively.
 
 <details>
 <summary><strong>Table of Contents</strong></summary>
