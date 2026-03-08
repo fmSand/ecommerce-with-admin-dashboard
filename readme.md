@@ -15,8 +15,8 @@ Full-stack e-commerce application built as Noroff back-end exam project. The sys
     - [2. Front-End](#2-front-end)
   - [Architecture](#architecture)
   - [Tech Stack](#tech-stack)
-    - [Back-End](#back-end)
-    - [Front-End](#front-end)
+      - [Back-End](#back-end)
+      - [Front-End](#front-end)
   - [API Documentation](#api-documentation)
   - [Testing](#testing)
   - [Node.js Version](#nodejs-version)
@@ -196,7 +196,7 @@ This project was developed and tested with **Node.js v22.14.0**. Node.js v18.x o
   Informed the `AppError` custom error class (`back-end/utils/AppError.js`) that carries a `statusCode` and optional `extraData`, allowing the error handler to produce structured JSON responses.
 
 - [Juniors-Dev Backend-Productivity-Graveyard - `asyncHandler.js`](https://github.com/Juniors-Dev/Backend-Productivity-Graveyard/blob/dev/middleware/asyncHandler.js)
-  Direct source for `back-end/middleware/asyncHandler.js`. Wraps async route handlers in try/catch so thrown errors reach the centralized error handler. Note: [not needed in Express 5](https://expressjs.com/en/guide/migrating-5.html#rejected-promises), which handles rejected promises natively. The [`response.js`](https://github.com/Juniors-Dev/Backend-Productivity-Graveyard/blob/dev/utilities/response.js) helper pattern also originated here - adapted for this project to call `res.status().json()` directly rather than returning plain objects, and reshaped to match the assignment's required JSON envelope format.
+  From a team hobby project I contributed to. The `asyncHandler` wrapper was carried over as-is to `back-end/middleware/asyncHandler.js`. Wraps async route handlers in try/catch so thrown errors reach the centralized error handler. Note: [not needed in Express 5](https://expressjs.com/en/guide/migrating-5.html#rejected-promises), which handles rejected promises natively. The [`response.js`](https://github.com/Juniors-Dev/Backend-Productivity-Graveyard/blob/dev/utilities/response.js) helper pattern also originated here - adapted for this project to call `res.status().json()` directly rather than returning plain objects, and reshaped to match the assignment's required JSON envelope format.
 
 ### Authentication and Security
 
