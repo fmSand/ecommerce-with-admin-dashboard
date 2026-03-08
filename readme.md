@@ -15,8 +15,8 @@ Full-stack e-commerce application built as Noroff back-end exam project. The sys
     - [2. Front-End](#2-front-end)
   - [Architecture](#architecture)
   - [Tech Stack](#tech-stack)
-      - [Back-End](#back-end)
-      - [Front-End](#front-end)
+    - [Back-End](#back-end)
+    - [Front-End](#front-end)
   - [API Documentation](#api-documentation)
   - [Testing](#testing)
   - [Node.js Version](#nodejs-version)
@@ -262,20 +262,21 @@ This project was developed and tested with **Node.js v22.14.0**. Node.js v18.x o
 - [Noroff DAB course assignment](https://github.com/noroff-backend-1/mar24pt-dab-ca-1-fmaries)
   First project combining Sequelize with role-based access control. The `requireAdmin` middleware pattern adapted from here (simplified from dual HTML/JSON response to HTML-only, since the exam frontend is purely server-rendered). The `models/index.js` dynamic model loader pattern also carried over from course material used in this assignment.
 
-- Noroff course materials
+- Noroff course material <br>
   The `models/index.js` Sequelize dynamic model loader pattern was first introduced in the AW24 DAB Module 3 and used across several course modules. Auth middleware foundations, JWT usage, and password hashing approach also originate from course material.
 
 ---
 
 ## 👤Student Information
+
 **Frida Sand**
+
 - **Class:** mar24pt-sp1-ca
 - **Institution:** Noroff School of Technology and Digital Media
 - **Project:** Back-end Development Year 1 - Exam Project 1
 
 ![](http://images.restapi.co.za/pvt/Noroff-64.png)
 
-*This project was developed as part of my Back-end Development studies at Noroff, 2026.*
+_This project was developed as part of my Back-end Development studies at Noroff, 2026._
 
 <p align="right"><a href="#readme-top">Back to top</a></p>
-
