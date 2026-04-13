@@ -1,4 +1,4 @@
-# Noroff EP E-Commerce - Admin Front-End (EPAdmin)
+# EP E-Commerce - Admin Front-End (EPAdmin)
 
 Server-rendered admin panel for managing the Noroff EP e-commerce platform. This application consumes the back-end REST API exclusively and does not access the database directly.
 
