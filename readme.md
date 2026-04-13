@@ -1,8 +1,8 @@
 <a id="readme-top"></a>
 
-# Noroff EP E-Commerce
+# EP E-Commerce
 
-Full-stack e-commerce application built as Noroff back-end exam project. The system consists of two separate Express applications: a REST API (back-end) and a server-rendered admin panel (front-end). The back-end provides all data access through API endpoints, and the front-end consumes those endpoints exclusively.
+Full-stack e-commerce application built as Noroff back-end assignment. The system consists of two separate Express applications: a REST API (back-end) and a server-rendered admin panel (front-end). The back-end provides all data access through API endpoints, and the front-end consumes those endpoints exclusively.
 
 <details>
 <summary><strong>Table of Contents</strong></summary>
@@ -25,9 +25,7 @@ Full-stack e-commerce application built as Noroff back-end exam project. The sys
     - [Error Handling](#error-handling)
     - [Authentication and Security](#authentication-and-security)
     - [Checkout and Financial Calculations](#checkout-and-financial-calculations)
-    - [AI Usage](#ai-usage)
     - [Previous Work](#previous-work)
-  - [👤Student Information](#student-information)
 
 </details>
 
@@ -228,55 +226,3 @@ This project was developed and tested with **Node.js v22.14.0**. Node.js v18.x o
 
 - [Boot.dev- "Node.js Random Number"](https://blog.boot.dev/cryptography/node-js-random-number/)
   Additional reference for `crypto.randomInt` usage and why it is preferred over `Math.random` for generating identifiers.
-
-### AI Usage
-
-[Claude.ai](https://claude.ai) was used as a discussion partner throughout this project for architectural decisions, code review, and debugging. Most topics involved back-and-forth discussion rather than direct code generation. Suggestions were evaluated against the brief and documentation before being adopted, adapted, or rejected.
-
-- **apiClient fetch wrapper** - `front-end/utils/apiClient.js` started as a basic fetch helper. AI helped restructure it into the current form: token attachment from session, JSON parsing with content-type checking, and error normalization with status code propagation.
-
-- **Integer-cents arithmetic implementation** - The concept of using integer cents for monetary calculations came from the HackerOne article (see [Checkout and Financial Calculations](#checkout-and-financial-calculations)). The JavaScript implementation was worked through with AI, specifically the `Number()` coercion needed because Sequelize returns DECIMAL fields as strings (`back-end/services/CheckoutService.js`, lines 38-43):
-
-  ```js
-  const priceCents = Math.round(Number(item.unitPriceAtPurchase) * 100);
-  ```
-
-- **Row-level locking for stock validation** - AI suggested using Sequelize's `LOCK.UPDATE` to prevent race conditions where concurrent requests read stale stock before decrementing. Applied in `ProductService.lockAndValidateStock()` (`back-end/services/ProductService.js`) which is called during checkout, and in `CartService.addItem()` (`back-end/services/CartService.js`) for stock checks at cart-add. AI initially suggested locking more broadly; after evaluating the actual risk profile, it was scoped to only these two methods where a read-then-write on the product row actually occurs.
-
-  ```js
-  const product = await this.Product.findByPk(productId, { transaction, lock: transaction.LOCK.UPDATE });
-  ```
-
-- **Flash message pattern** - The dual-pattern approach for flash messages in the front-end (`front-end/app.js` `front-end/views/partials/flash.ejs`): session flash for redirect-based notifications, inline `message` for same-page validation errors, with inline given precedence to prevent stacking.
-
-  ```js
-  res.locals.flash = req.session?.flash || null;
-  delete req.session.flash;
-  ```
-
-### Previous Work
-
-- [Noroff JSS course assignment](https://github.com/noroff-backend-1/mar24pt-jss-ca-1-FridusBytes)
-  The front-end `app.js` structure is adapted from this project. The key adaptation was replacing Passport-based authentication with session-stored JWT, since the exam frontend delegates authentication to the back-end API rather than verifying credentials itself.
-
-- [Noroff DAB course assignment](https://github.com/noroff-backend-1/mar24pt-dab-ca-1-fmaries)
-  First project combining Sequelize with role-based access control. The `requireAdmin` middleware pattern adapted from here (simplified from dual HTML/JSON response to HTML-only, since the exam frontend is purely server-rendered). The `models/index.js` dynamic model loader pattern also carried over from course material used in this assignment.
-
-- Noroff course material <br>
-  The `models/index.js` Sequelize dynamic model loader pattern was first introduced in the AW24 DAB Module 3 and used across several course modules. Auth middleware foundations, JWT usage, and password hashing approach also originate from course material.
-
----
-
-## 👤Student Information
-
-**Frida Sand**
-
-- **Class:** mar24pt-sp1-ca
-- **Institution:** Noroff School of Technology and Digital Media
-- **Project:** Back-end Development Year 1 - Exam Project 1
-
-![](http://images.restapi.co.za/pvt/Noroff-64.png)
-
-_This project was developed as part of my Back-end Development studies at Noroff, 2026._
-
-<p align="right"><a href="#readme-top">Back to top</a></p>
