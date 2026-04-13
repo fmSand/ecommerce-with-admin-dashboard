@@ -1,6 +1,6 @@
-# Noroff EP E-Commerce - Back-End API
+# EP E-Commerce - Back-End API
 
-REST API for the Noroff EP e-commerce platform. Handles authentication, users, products, brands, categories, cart, orders, memberships, and related CRUD operations. The admin front-end (EPAdmin) consumes this API exclusively.
+REST API for EP e-commerce platform. Handles authentication, users, products, brands, categories, cart, orders, memberships, and related CRUD operations. The admin front-end (EPAdmin) consumes this API exclusively.
 
 ## Tech Stack
 
