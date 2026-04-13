@@ -50,6 +50,13 @@ Each application has its own `package.json`, dependencies, and README with detai
 - Node.js v18.x or higher (developed and tested with v22.14.0)
 - MySQL 8.x
 
+
+**Clone the repository:**
+ ```bash
+ git clone <repository-url>
+ cd <repository-directory>
+ ```
+
 ### 1. Back-End
 
 ```bash
