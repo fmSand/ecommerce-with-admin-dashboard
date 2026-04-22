@@ -25,7 +25,6 @@ Full-stack e-commerce application built as Noroff back-end assignment. The syste
     - [Error Handling](#error-handling)
     - [Authentication and Security](#authentication-and-security)
     - [Checkout and Financial Calculations](#checkout-and-financial-calculations)
-    - [Previous Work](#previous-work)
 
 </details>
 
