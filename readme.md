@@ -53,8 +53,8 @@ Each application has its own `package.json`, dependencies, and README with detai
 
 **Clone the repository:**
  ```bash
- git clone <repository-url>
- cd <repository-directory>
+ git clone https://github.com/fmSand/ecommerce-with-admin-dashboard
+ cd ecommerce-with-admin-dashboard
  ```
 
 ### 1. Back-End
@@ -183,14 +183,11 @@ This project was developed and tested with **Node.js v22.14.0**. Node.js v18.x o
 - [NestJS - Authentication documentation](https://docs.nestjs.com/security/authentication) (pattern reference, not the library itself)
   The pattern of having a dedicated AuthService that orchestrates credential validation by calling UserService, keeping token logic out of the user data layer. Influenced the separation between `AuthService` and `UserService` in `back-end/services/`.
 
-- [Wikipedia - Post/Redirect/Get pattern](https://en.wikipedia.org/wiki/Post/Redirect/Get)
-  Used in the front-end for all form submissions (e.g., product create/edit, user profile edit, role update). After a successful POST, the route handler redirects with a flash message to avoid duplicate submissions on refresh.
-
 - [Node.js Design Patterns- "Node.js HTTP Requests"](https://nodejsdesignpatterns.com/blog/nodejs-http-request/)
   Reference for fetch patterns including `AbortSignal.timeout()`. Used in the back-end `/init` route (10s timeout on Noroff API call) and the front-end `apiClient` (10s timeout on all API requests to the back-end).
 
 - [jaredhanson/connect-flash](https://github.com/jaredhanson/connect-flash)
-  Pattern reference for session-based flash messages. The project implements its own lightweight version (setting `req.session.flash` and clearing it in a global middleware in `front-end/app.js`) rather than using the library directly.
+  Pattern reference for session-based flash messages. This project implements its own lightweight version (setting `req.session.flash` and clearing it in a global middleware in `front-end/app.js`) rather than using the library directly.
 
 ### Error Handling
 
@@ -201,8 +198,7 @@ This project was developed and tested with **Node.js v22.14.0**. Node.js v18.x o
   Informed the `AppError` custom error class (`back-end/utils/AppError.js`) that carries a `statusCode` and optional `extraData`, allowing the error handler to produce structured JSON responses.
 
 - [Juniors-Dev Backend-Productivity-Graveyard - `asyncHandler.js`](https://github.com/Juniors-Dev/Backend-Productivity-Graveyard/blob/dev/middleware/asyncHandler.js)
-  From a team hobby project I contributed to. The `asyncHandler` wrapper was carried over as-is to `back-end/middleware/asyncHandler.js`. Wraps async route handlers in try/catch so thrown errors reach the centralized error handler. Note: [not needed in Express 5](https://expressjs.com/en/guide/migrating-5.html#rejected-promises), which handles rejected promises natively. The [`response.js`](https://github.com/Juniors-Dev/Backend-Productivity-Graveyard/blob/dev/utilities/response.js) helper pattern also originated here - adapted for this project to call `res.status().json()` directly rather than returning plain objects, and reshaped to match the assignment's required JSON envelope format.
-
+  From a team hobby project I contributed to. The `asyncHandler` wrapper was carried over as-is to `back-end/middleware/asyncHandler.js`. Wraps async route handlers in try/catch so thrown errors reach the centralized error handler. _Note: [not needed in Express 5](https://expressjs.com/en/guide/migrating-5.html#rejected-promises), which handles rejected promises natively._
 ### Authentication and Security
 
 - [auth0/express-jwt](https://github.com/auth0/express-jwt)
