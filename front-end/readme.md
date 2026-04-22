@@ -22,7 +22,7 @@ Server-rendered admin panel for managing the Noroff EP e-commerce platform. This
 1. **Clone the repository** (if not already done)
 
    ```bash
-   git clone https://github.com/noroff-backend-1/mar24pt-ep-ca-1-fmSand
+   git clone https://github.com/fmSand/ecommerce-with-admin-dashboard
    ```
 
 2. **Navigate to the front-end directory**
