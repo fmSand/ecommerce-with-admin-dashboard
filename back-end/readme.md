@@ -25,7 +25,7 @@ REST API for EP e-commerce platform. Handles authentication, users, products, br
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/noroff-backend-1/mar24pt-ep-ca-1-fmSand
+   git clone https://github.com/fmSand/ecommerce-with-admin-dashboard
    ```
 
 2. **Navigate to the back-end directory**
