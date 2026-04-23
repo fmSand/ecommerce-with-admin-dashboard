@@ -65,7 +65,7 @@ cp .env.example .env        # Fill in your database credentials and JWT secret
 npm start                   # Runs on http://localhost:3000
 ```
 
-Then initialize the database by sending `POST http://localhost:3000/init`. This seeds roles, memberships, the admin user, order statuses, and all products from the Noroff API.
+Then initialize the database by sending `POST http://localhost:3000/init`. This seeds roles, memberships, the admin user, order statuses, and all products from the provided API.
 
 ### 2. Front-End
 
