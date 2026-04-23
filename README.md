@@ -2,7 +2,7 @@
 
 # EP E-Commerce
 
-Full-stack e-commerce application built as Noroff back-end assignment. The system consists of two separate Express applications: a REST API (back-end) and a server-rendered admin panel (front-end). The back-end provides all data access through API endpoints, and the front-end consumes those endpoints exclusively.
+Full-stack e-commerce application built for back-end course assignment. The system consists of two separate Express applications: a REST API (back-end) and a server-rendered admin panel (front-end). The back-end provides all data access through API endpoints, and the front-end consumes those endpoints exclusively.
 
 <details>
 <summary><strong>Table of Contents</strong></summary>
