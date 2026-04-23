@@ -53,7 +53,7 @@ REST API for EP e-commerce platform. Handles authentication, users, products, br
 5. **Create the MySQL database**
 
    ```sql
-   CREATE DATABASE noroff_ep_ecommerce;
+   CREATE DATABASE ep_ecommerce;
    ```
 
    Or use whatever name you configure in `DATABASE_NAME` in your `.env` file.
@@ -72,7 +72,7 @@ REST API for EP e-commerce platform. Handles authentication, users, products, br
 
 7. **Initialize the database**
 
-   Send a `POST` request to seed the database with roles, memberships, the admin user, order statuses, and products from the Noroff API:
+   Send a `POST` request to seed the database with roles, memberships, the admin user, order statuses, and products from the course provided API:
 
    ```
    POST http://localhost:3000/init
