@@ -33,7 +33,6 @@ Full-stack e-commerce application built for back-end course assignment. The syst
 ```
 ├── back-end/                # REST API (Express, Sequelize, MySQL)
 ├── front-end/               # Admin panel (Express, EJS, Bootstrap)
-├── Documentation/           # Reflection report (PDF)
 └── readme.md                # This file
 ```
 
