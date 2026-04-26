@@ -119,8 +119,8 @@ ADMIN_PASSWORD=your_mysql_password
 JWT_SECRET=your-secret-jwt-key
 JWT_EXPIRES_IN=2h
 
-# Noroff API (used by /init endpoint)
-NOROFF_PRODUCTS_URL="http://backend.restapi.co.za/items/products"
+# API (used by /init endpoint)
+PRODUCTS_URL="http://backend.restapi.co.za/items/products"
 ```
 
 Replace `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `JWT_SECRET` with your own values.
