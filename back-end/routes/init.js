@@ -10,7 +10,7 @@ const { success } = require("../utils/response");
  *   post:
  *     summary: Initialize the database
  *     description: |
- *       Populates the database with initial data from the Noroff API. This endpoint should only be called once.
+ *       Populates the database with initial data from the Products API. This endpoint should only be called once.
  *       If the database is already initialized, returns 200 with an informational message.
  *
  *       This endpoint:
@@ -61,19 +61,19 @@ const { success } = require("../utils/response");
  *                       type: string
  *                       example: Database already initialized
  *       500:
- *         description: Server configuration error (NOROFF_PRODUCTS_URL not set)
+ *         description: Server configuration error (PRODUCTS_URL not set)
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/InternalErrorResponse'
  *       502:
- *         description: Noroff API returned an error or invalid data
+ *         description: Products API returned an error or invalid data
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/InternalErrorResponse'
  *       504:
- *         description: Noroff API request timed out
+ *         description: Products API request timed out
  *         content:
  *           application/json:
  *             schema:
@@ -81,16 +81,16 @@ const { success } = require("../utils/response");
  */
 router.post("/", async (req, res, next) => {
   try {
-    if (!process.env.NOROFF_PRODUCTS_URL) {
-      throw new AppError(500, "NOROFF_PRODUCTS_URL is not configured");
+    if (!process.env.PRODUCTS_URL) {
+      throw new AppError(500, "PRODUCTS_URL is not configured");
     }
 
-    const response = await fetch(process.env.NOROFF_PRODUCTS_URL, {
+    const response = await fetch(process.env.PRODUCTS_URL, {
       signal: AbortSignal.timeout(10000),
     });
 
     if (!response.ok) {
-      throw new AppError(502, `Noroff API returned ${response.status}`);
+      throw new AppError(502, `Products API returned ${response.status}`);
     }
 
     const noroffData = await response.json();
@@ -103,7 +103,7 @@ router.post("/", async (req, res, next) => {
     return success(res, 201, "Database initialized successfully");
   } catch (err) {
     if (err.name === "TimeoutError") {
-      return next(new AppError(504, "Noroff API request timed out"));
+      return next(new AppError(504, "Products API request timed out"));
     }
     next(err);
   }
