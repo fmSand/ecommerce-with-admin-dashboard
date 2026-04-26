@@ -111,7 +111,7 @@ PORT=3000
 # Database
 DIALECT=mysql
 HOST=localhost
-DATABASE_NAME=noroff_ep_ecommerce
+DATABASE_NAME=ep_ecommerce
 ADMIN_USERNAME=your_mysql_username
 ADMIN_PASSWORD=your_mysql_password
 
