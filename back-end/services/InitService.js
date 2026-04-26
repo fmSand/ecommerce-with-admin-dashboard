@@ -3,11 +3,11 @@ const { AppError } = require("../utils/AppError");
 const { ORDER_STATUSES, ROLES, MEMBERSHIPS, ADMIN_USER } = require("../constants/seedData");
 const { ADMIN_ROLE_ID } = require("../constants/roles");
 
-async function initializeDatabase(db, noroffResponse) {
-  const products = noroffResponse?.data;
+async function initializeDatabase(db, apiResponse) {
+  const products = apiResponse?.data;
 
   if (!Array.isArray(products) || products.length === 0) {
-    throw new AppError(502, "Invalid Noroff data");
+    throw new AppError(502, "Invalid data");
   }
 
   const transaction = await db.sequelize.transaction();
