@@ -51,7 +51,7 @@ Each application has its own `package.json`, dependencies, and README with detai
 
 **Clone the repository:**
  ```bash
- git clone https://github.com/fmSand/ecommerce-with-admin-dashboard
+ git clone https://github.com/fmSand/ecommerce-with-admin-dashboard.git
  cd ecommerce-with-admin-dashboard
  ```
 
